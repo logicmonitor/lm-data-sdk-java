@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="java">
+	
+	<head>
+	<meta charset="utf-8"/>
+	<title>LogIngestion - LogicMonitor Java Data SDk</title>
+
+	<!-- Description -->
+	<meta name="description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="generator" content="SkyDocs v0.7.4 Beta"/>
+	
+	<!-- OpenGraph -->
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="LogIngestion - LogicMonitor Java Data SDk"/>
+	<meta property="og:site_name" content="LogicMonitor Java Data SDk"/>
+	<meta property="og:url" content="index.html/java/LogIngestion.html"/>
+	<meta property="og:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta property="og:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:title" content="LogIngestion - LogicMonitor Java Data SDk"/>
+	<meta name="twitter:site" content="LogicMonitor Java Data SDk"/>
+	<meta name="twitter:creator" content="@Skyost_"/>
+	<meta name="twitter:url" content="index.html/java/LogIngestion.html"/>
+	<meta name="twitter:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="twitter:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Styles -->
+	<meta name="theme-color" content="#2980b9"/>
+		
+	<link rel="icon" type="image/png" href="../assets/img/icon.png"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato"/>
+	
+	<link rel="stylesheet" type="text/css" href="../assets/css/page.css"/>
+</head>
+
+	<body>
+		<div id="content" class="row">
+			<div id="navbar" class="col-md-4 col-lg-3">
+				<header>
+  <h1><span class="logo"></span><a href="../java/">LogicMonitor Java Data SDk</a></h1>
+  
+  <form action="../search.html" method="get">
+    <input class="form-control" name="keywords" placeholder="Search..." type="text">
+  </form>
+  
+</header>
+
+<div class="d-md-none clearfix" id="mobile-bar">
+  <i aria-hidden="true" class="fa fa-bars"></i>
+</div>
+
+<div class="d-none d-md-block" id="navigation">
+  <nav>
+    <ul>
+<li>
+<a href="MetricsIngestion.html">Metrics Example</a>
+</li>
+
+<li>
+<a href="LogIngestion.html">Logs Example</a>
+</li>
+
+
+</ul>
+
+  </nav>
+
+  <footer class="col-md-4 col-lg-3">
+    Copyright © 2008-2022 Logicmonitor Inc.
+  </footer>
+</div>
+			</div>
+			<div id="article" class="col-md-8 col-lg-9">
+				<article class="col-md-12 col-lg-9">
+					<section class="clearfix" id="article-header">
+  <ul class="links">
+    <li><small><a class="text-muted" href="https://github.com/logicmonitor/lm-data-sdk-java">Start it on Github</a></small>
+    </li>
+  </ul>
+</section>
+					<section>
+						<h1 id="logicmonitordatasdk---the-java-library-for-the-logicmonitor-logs-ingest-api">LogicMonitor.DataSDK - the Java library for the LogicMonitor Logs ingest API</h1>
+<p>LogicMonitor is a SaaS-based performance monitoring platform that provides full visibility into
+complex, hybrid infrastructures, offering granular performance monitoring and actionable data and
+insights. If you have custom logs that you want to analyze, you can send the logs directly to your LogicMonitor account via the logs ingestion API.
+For using this application users have to create LMAuth token to get access id and
+key from santaba.</p>
+<ul>
+<li>SDK version: 0.0.1-alpha</li>
+</ul>
+<p><a name = "Single Log Ingestion"></a></p>
+<h2 id="single-log-ingestion">Single Log Ingestion</h2>
+<p>SDK must be configured with LogicMonitor.DataSDK Configuration class. While using LMv1 authentication set LM_ACCESS_ID and
+LM_ACCESS_KEY properties. Company's name or Account
+name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.</p>
+<p>For Log ingestion, log message has to be passed along the resource object to identify the
+resource. Create a resource object using LogicMonitor.DataSDK.Models namespace.</p>
+<pre><code class="language-java">Configuration conf = new Configuration();
+final boolean batch = false;
+HashMap&lt;String, String&gt; resourceIds = new HashMap&lt;&gt;();
+resourceIds.put(&quot;system.displayname&quot;,&quot;data-logs&quot;);
+Resource resource = Resource.builder().ids(resourceIds).build();
+Logs logs = new Logs(conf, 10, batch, responseInterface);
+logs.sendLogs(&quot;Testing log Api&quot;, resource, metadata);
+</code></pre>
+<p>While Logs Ingestion we will be passing either single request or batching request, &quot;Batching is Bluk of request will be passed in single API call&quot;.
+To determine if user is sending bathing request or single request, we have boolean variable as &quot;batch&quot; which can be true or false accordingly.</p>
+<p><a name="Model"></a></p>
+<h2 id="model">Model</h2>
+<ul>
+<li>
+<h3 id="resource">Resource</h3>
+</li>
+</ul>
+<pre><code class="language-java">Resource resource = Resource.builder().ids(resourceIds).build();
+</code></pre>
+<p><b>Ids(Dictonary&lt;string,string&gt;):</b>
+<br>
+An Dictionary of existing resource properties that will be
+used to identify the resource. See Managing Resources that Ingest Push Metrics for information on
+the types of properties that can be used. If no resource is matched and the create parameter is set
+to TRUE, a new resource is created with these specified resource IDs set on it. If the
+system.displayname and/or system.hostname property is included as resource IDs, they will be used as
+host name and display name respectively in the resulting resource.</p>
+<ul>
+<li>
+<h3 id="message">Message:</h3>
+<p>Message is string which contains the message that is used to be logged and send to LM site.</p>
+</li>
+<li>
+<h3 id="metadata">Metadata:</h3>
+<p>Metadata is dictionary which can used to ingest metadata. It can be viewd on LM site along with the
+logs and can we logged message.</p>
+</li>
+<li>
+<h3 id="timestamp">Timestamp:</h3>
+<p>Log generated time in Date Time format.</p>
+</li>
+</ul>
+
+					</section>
+					
+				</article>
+			</div>
+		</div>
+		
+		<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js"></script>
+<script src="../assets/js/page.js"></script>
+
+	<script src="../assets/localization/java.js"></script>
+
+		
+	</body>
+</html>

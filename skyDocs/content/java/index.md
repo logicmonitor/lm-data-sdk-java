@@ -11,7 +11,7 @@ metrics are presented alongside all other metrics gathered via
 LogicMonitor, providing a single pane of glass for metric monitoring and
 alerting.
 
-Similarly, If a log integration isn’t available or you have custom logs that you want to analyze, 
+Similarly, If a log integration isn’t available or you have custom logs that you want to analyze,
 you can send the logs directly to your LogicMonitor account via the logs ingestion API.
 
 ## Quick Start Notes:
@@ -48,13 +48,15 @@ LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TO
 name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.
 
 |      Environment variable      |  Description |
-|-------------|:------|
+|-------------|------:|
 |  `LM_COMPANY` |  Account name (Company Name) is your organization name |
 |  `LM_ACCESS_ID` |  Access id while using LMv1 authentication.  |
-|  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication. |
-|  `LM_BEARER_TOKEN` |    BearerToken while using Bearer authentication.|
+|  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication.|
+|  `LM_BEARER_TOKEN` |    BearerToken while using Bearer authentication. |
 
-### Read the Library Documentation to use Metrics/Logs ingestion API.
+### Read the Metrics/Logs example to use Metrics/Logs ingestion API.
+
+### See the project repository at [GitHub](https://github.com/logicmonitor/lm-data-sdk-java).
 
 ## Get in Touch
 
@@ -68,3 +70,6 @@ This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL
 was not distributed with this file, You can obtain
 one at https://mozilla.org/MPL/2.0/.
+
+
+

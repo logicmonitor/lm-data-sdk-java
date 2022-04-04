@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+	<meta charset="utf-8"/>
+	<title>Search results - LogicMonitor Java Data SDk</title>
+
+	<!-- Description -->
+	<meta name="description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="generator" content="SkyDocs v0.7.4 Beta"/>
+	
+	<!-- OpenGraph -->
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="Search results - LogicMonitor Java Data SDk"/>
+	<meta property="og:site_name" content="LogicMonitor Java Data SDk"/>
+	<meta property="og:url" content="index.html/en/search.html"/>
+	<meta property="og:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta property="og:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:title" content="Search results - LogicMonitor Java Data SDk"/>
+	<meta name="twitter:site" content="LogicMonitor Java Data SDk"/>
+	<meta name="twitter:creator" content="@Skyost_"/>
+	<meta name="twitter:url" content="index.html/en/search.html"/>
+	<meta name="twitter:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="twitter:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Styles -->
+	<meta name="theme-color" content="#2980b9"/>
+		
+	<link rel="icon" type="image/png" href="../assets/img/icon.png"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato"/>
+	
+	<link rel="stylesheet" type="text/css" href="../assets/css/page.css"/>
+</head>
+
+	<body>
+		<div id="content" class="row">
+			<div id="navbar" class="col-md-4 col-lg-3">
+				<header>
+  <h1><span class="logo"></span><a href="../en/">LogicMonitor Java Data SDk</a></h1>
+  
+  <form action="../search.html" method="get">
+    <input class="form-control" name="keywords" placeholder="Search..." type="text">
+  </form>
+  
+</header>
+
+<div class="d-md-none clearfix" id="mobile-bar">
+  <i aria-hidden="true" class="fa fa-bars"></i>
+</div>
+
+<div class="d-none d-md-block" id="navigation">
+  <nav>
+    <ul>
+<li>
+<a href="MetricsIngestion.html">Metrics Example</a>
+</li>
+
+<li>
+<a href="LogIngestion.html">Logs Example</a>
+</li>
+
+
+</ul>
+
+  </nav>
+
+  <footer class="col-md-4 col-lg-3">
+    Copyright © 2008-2022 Logicmonitor Inc.
+  </footer>
+</div>
+			</div>
+			<div id="article" class="col-md-8 col-lg-9">
+				<article class="col-md-12 col-lg-9">
+					<section class="clearfix" id="article-header">
+  <ul class="links">
+    <li><small><a class="text-muted" href="https://github.com/logicmonitor/lm-data-sdk-java">Start it on Github</a></small>
+    </li>
+  </ul>
+</section>
+					<section>
+						<h1>Search results</h1>
+<p>Here are your search results :</p>
+<p id="loading"><em>Loading...</em></p>
+<ul id="results" style="display: none; padding-left: 0; list-style-type: none;"></ul>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.1.4/lunr.min.js"></script>
+<script type="text/javascript">
+
+	const PAGES = {'-java-index.html': {title: 'Index', content: 'The LogicMonitor Java Data libraryThis Java Library is suitable for ingesting the metrics or logs into the LogicMonitor Platform.Overview...', url: 'java/index.html'}, '-java-MetricsIngestion.html': {title: 'MetricsIngestion', content: 'LogicMonitor.DataSDK - the Java library for the LogicMonitor Metrics ingest APILogicMonitor is a SaaS-based performance monitoring platfo...', url: 'java/MetricsIngestion.html'}, '-java-LogIngestion.html': {title: 'LogIngestion', content: 'LogicMonitor.DataSDK - the Java library for the LogicMonitor Logs ingest APILogicMonitor is a SaaS-based performance monitoring platform ...', url: 'java/LogIngestion.html'}};
+
+</script>
+<script type="text/javascript">
+	(function() {
+        let searchTerm = getQueryVariable('keywords');
+		if(!searchTerm) {
+			displaySearchResults(0, 0);
+			return;
+		}
+        let idx = lunr(function() {
+			this.field('id');
+			this.field('title', {
+				boost: 10
+			});
+			this.field('content');
+			this.field('url');
+			
+			for(let page in PAGES) { // Add the data to lunr
+				this.add({
+					'id': page,
+					'title': PAGES[page].title,
+					'content': PAGES[page].content,
+					'url': PAGES[page].url
+				});
+			}
+		});
+        let results = idx.search(searchTerm); // Get lunr to perform a search
+		displaySearchResults(results, PAGES);
+	})();
+
+	/**
+	* Extracts a variable from the url.
+	*/
+
+	function getQueryVariable(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split('&');
+
+		for(let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split('=');
+
+			if(pair[0] === variable) {
+				return decodeURIComponent(pair[1].replace(/\+/g, '%20'));
+			}
+		}
+	}
+
+	/**
+	* Displays the search results on the page.
+	*/
+
+	function displaySearchResults(results, pages) {
+        let searchResults = document.getElementById('results');
+
+		if(results.length) {
+            let appendString = '';
+
+			for(let i = 0; i < results.length; i++) {	// Iterate over the results
+                let item = pages[results[i].ref];
+				appendString += '<li><a href="' + item.url + '"><h2>' + item.title + '</h2></a>';
+				appendString += '<p>' + item.content + '...</p></li>';
+			}
+
+			searchResults.innerHTML = appendString;
+		}
+		else {
+			searchResults.innerHTML = '<li>No result.</li>';
+		}
+		searchResults.style.display = '';
+		document.getElementById('loading').style.display = 'none';
+	}
+</script>
+
+					</section>
+					
+				</article>
+			</div>
+		</div>
+		
+		<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js"></script>
+<script src="../assets/js/page.js"></script>
+
+		
+	</body>
+</html>

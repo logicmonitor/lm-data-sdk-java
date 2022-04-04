@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="java">
+	
+	<head>
+	<meta charset="utf-8"/>
+	<title>MetricsIngestion - LogicMonitor Java Data SDk</title>
+
+	<!-- Description -->
+	<meta name="description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="generator" content="SkyDocs v0.7.4 Beta"/>
+	
+	<!-- OpenGraph -->
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="MetricsIngestion - LogicMonitor Java Data SDk"/>
+	<meta property="og:site_name" content="LogicMonitor Java Data SDk"/>
+	<meta property="og:url" content="index.html/java/MetricsIngestion.html"/>
+	<meta property="og:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta property="og:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:title" content="MetricsIngestion - LogicMonitor Java Data SDk"/>
+	<meta name="twitter:site" content="LogicMonitor Java Data SDk"/>
+	<meta name="twitter:creator" content="@Skyost_"/>
+	<meta name="twitter:url" content="index.html/java/MetricsIngestion.html"/>
+	<meta name="twitter:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="twitter:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Styles -->
+	<meta name="theme-color" content="#2980b9"/>
+		
+	<link rel="icon" type="image/png" href="../assets/img/icon.png"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato"/>
+	
+	<link rel="stylesheet" type="text/css" href="../assets/css/page.css"/>
+</head>
+
+	<body>
+		<div id="content" class="row">
+			<div id="navbar" class="col-md-4 col-lg-3">
+				<header>
+  <h1><span class="logo"></span><a href="../java/">LogicMonitor Java Data SDk</a></h1>
+  
+  <form action="../search.html" method="get">
+    <input class="form-control" name="keywords" placeholder="Search..." type="text">
+  </form>
+  
+</header>
+
+<div class="d-md-none clearfix" id="mobile-bar">
+  <i aria-hidden="true" class="fa fa-bars"></i>
+</div>
+
+<div class="d-none d-md-block" id="navigation">
+  <nav>
+    <ul>
+<li>
+<a href="MetricsIngestion.html">Metrics Example</a>
+</li>
+
+<li>
+<a href="LogIngestion.html">Logs Example</a>
+</li>
+
+
+</ul>
+
+  </nav>
+
+  <footer class="col-md-4 col-lg-3">
+    Copyright © 2008-2022 Logicmonitor Inc.
+  </footer>
+</div>
+			</div>
+			<div id="article" class="col-md-8 col-lg-9">
+				<article class="col-md-12 col-lg-9">
+					<section class="clearfix" id="article-header">
+  <ul class="links">
+    <li><small><a class="text-muted" href="https://github.com/logicmonitor/lm-data-sdk-java">Start it on Github</a></small>
+    </li>
+  </ul>
+</section>
+					<section>
+						<h1 id="logicmonitordatasdk---the-java-library-for-the-logicmonitor-metrics-ingest-api">LogicMonitor.DataSDK - the Java library for the LogicMonitor Metrics ingest API</h1>
+<p>LogicMonitor is a SaaS-based performance monitoring platform that provides full visibility into
+complex, hybrid infrastructures, offering granular performance monitoring and actionable data and
+insights. Metrics-Ingest provides the entry point in the form of public rest APIs for ingesting metrics
+into LogicMonitor. For using this application users have to create LMAuth token to get access id and
+key or create Bearer token from santaba.</p>
+<ul>
+<li>SDK version: 0.0.1-alpha</li>
+</ul>
+<p><a name = "Metrics Ingestion Example"></a></p>
+<h2 id="metrics-ingestion-example">Metrics Ingestion Example</h2>
+<p>SDK must be configured with LogicMonitor.DataSDK Configuration class. While using LMv1 authentication set LM_ACCESS_ID and
+LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TOKEN property. Company's name or Account
+name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.</p>
+<p>For metrics ingestion user must create a object of Resource, DataSource, DataSourceInstance and
+DataPoint using LogicMonitor.DataSDK.Model namespace, also Map should be created in which '
+Key' hold the Time(in epoch) for which data is being emitted and 'Value' will the value of
+datapoint.</p>
+<pre><code class="language-java">//Pass autheticate variable as Environment variable.
+Configuration conf = new Configuration();
+final boolean batch = false;
+Metrics metrics = new Metrics(conf, 10, batch, responseInterface);
+
+Resource resource = Resource.builder().ids(resourceIds).name(resourceName).build();
+DataSource dataSource = DataSource.builder().name(dataSourceName).group(dataSourceGroup).singleInstanceDS(false).build();
+DataSourceInstance dataSourceInstance = DataSourceInstance.builder().name(instanceName).build();
+DataPoint dataPoint = DataPoint.builder().name(cpuUsage).build();
+Map&lt;String, String&gt; cpuUsageValue = new HashMap&lt;&gt;();
+
+cpuUsageValue.put(String.valueOf(Instant.now().getEpochSecond()), cpuUsageMetric);
+metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint2, cpuUsageValue);
+</code></pre>
+<p>While Metrics Ingestion we will be passing either single request or batching request, &quot;Batching is Bluk of request will be passed in single API call&quot;.
+To determine if user is sending bathing request or single request, we have boolean variable as &quot;batch&quot; which can be true or false accordingly.</p>
+<p>Read below for understanding more about Models in SDK.</p>
+<p><a name="Model"></a></p>
+<h2 id="model">Model</h2>
+<ul>
+<li>
+<h3 id="resource">Resource</h3>
+</li>
+</ul>
+<pre><code class="language-java">Resource resource = new Resource(ids, name, description, properties, create);
+</code></pre>
+<p><b>Ids(Dictonary&lt;string,string&gt;):</b> <br>An Dictionary of existing resource properties that will be
+used to identify the resource. See Managing Resources that Ingest Push Metrics for information on
+the types of properties that can be used. If no resource is matched and the create parameter is set
+to TRUE, a new resource is created with these specified resource IDs set on it. If the
+system.displayname and/or system.hostname property is included as resource IDs, they will be used as
+host name and display name respectively in the resulting resource.</p>
+<p><b>Name(string):</b> <br>Resource unique name. Only considered when creating a new resource.</p>
+<p><b>Properties(Dictonary&lt;string,string&gt;):</b> <br>New properties for resource. Updates to existing
+resource properties are not considered. Depending on the property name, we will convert these
+properties into system, auto, or custom properties.</p>
+<p><b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.</p>
+<p><b>Create(bool):</b> <br>Do you want to create the resource.</p>
+<ul>
+<li>
+<h3 id="datasource">DataSource</h3>
+</li>
+</ul>
+<pre><code class="language-java">DataSource dataSource = new DataSource(dataSourceName, dataSourceGroup, displayName, id);
+</code></pre>
+<p><b>Name(string):</b>  <br>DataSource unique name. Used to match an existing DataSource. If no existing
+DataSource matches the name provided here, a new DataSource is created with this name.</p>
+<p><b>DisplayName(string):</b> <br>DataSource display name. Only considered when creating a new DataSource.</p>
+<p><b>Group(string):</b> <br>DataSource group name. Only considered when DataSource does not already belong
+to a group. Used to organize the DataSource within a DataSource group. If no existing DataSource
+group matches, a new group is created with this name and the DataSource is organized under the new
+group.</p>
+<p><b>Id(int):</b> <br>DataSource unique ID. Used only to match an existing DataSource. If no existing
+DataSource matches the provided ID, an error results.</p>
+<ul>
+<li>
+<h3 id="datasourceinstance">DatasourceInstance</h3>
+</li>
+</ul>
+<pre><code class="language-java">DataSourceInstance dataSourceInstance = new DataSourceInstance(name, displayName, description, properties);
+</code></pre>
+<p><b>Name(string):</b> <br>Instance name. If no existing instance matches, a new instance is created with
+this name.</p>
+<p><b>DisplayName(string):</b> <br>Instance display name. Only considered when creating a new instance.</p>
+<p><b>Properties(Dictionary&lt;string,string&gt;):</b> <br>New properties for instance. Updates to existing
+instance properties are not considered. Depending on the property name, we will convert these
+properties into system, auto, or custom properties.</p>
+<p><b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.</p>
+<ul>
+<li>
+<h3 id="datapoint">DataPoint</h3>
+</li>
+</ul>
+<pre><code class="language-java">DataPoint dataPoint = new DataPoint(name, description, aggregationType, description);
+</code></pre>
+<p><b>Name(string):</b><br> Datapoint name. If no existing datapoint matches for specified DataSource, a
+new datapoint is created with this name.</p>
+<p><b>AggreationType(string):</b><br>The aggregation method, if any, that should be used if data is pushed
+in sub-minute intervals. Allowed options are “sum”, “average” and “none”(default) where “none” would
+take last value for that minute. Only considered when creating a new datapoint. See the About the
+Push Metrics REST API section of this guide for more information on datapoint value aggregation
+intervals.</p>
+<p><b>Description(string):</b> <br>Datapoint description. Only considered when creating a new datapoint.</p>
+<p><b>Type(string):</b><br> Metric type as a number in string format. Allowed options are “guage” (default)
+and “counter”. Only considered when creating a new datapoint.</p>
+<ul>
+<li>
+<h3 id="value">Value</h3>
+</li>
+</ul>
+<pre><code class="language-java">Map&lt;String, strinStringg&gt; value = new HashMap&lt;&gt;();
+</code></pre>
+<p>Value is a dictionary which stores the time of data emittion(in epoch) as Key of dictionary and
+Metric Data as Value of dictionary.</p>
+<p><a name="documentation-for-api-endpoints"></a></p>
+
+					</section>
+					
+				</article>
+			</div>
+		</div>
+		
+		<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js"></script>
+<script src="../assets/js/page.js"></script>
+
+	<script src="../assets/localization/java.js"></script>
+
+		
+	</body>
+</html>

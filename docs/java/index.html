@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="java">
+	
+	<head>
+	<meta charset="utf-8"/>
+	<title>Index - LogicMonitor Java Data SDk</title>
+
+	<!-- Description -->
+	<meta name="description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="generator" content="SkyDocs v0.7.4 Beta"/>
+	
+	<!-- OpenGraph -->
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="Index - LogicMonitor Java Data SDk"/>
+	<meta property="og:site_name" content="LogicMonitor Java Data SDk"/>
+	<meta property="og:url" content="index.html/java/index.html"/>
+	<meta property="og:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta property="og:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:title" content="Index - LogicMonitor Java Data SDk"/>
+	<meta name="twitter:site" content="LogicMonitor Java Data SDk"/>
+	<meta name="twitter:creator" content="@Skyost_"/>
+	<meta name="twitter:url" content="index.html/java/index.html"/>
+	<meta name="twitter:description" content="This SDK is for ingestion of the metrics into LogicMonitor platform."/>
+	<meta name="twitter:image" content="index.html/assets/img/icon.png"/>
+	
+	<!-- Styles -->
+	<meta name="theme-color" content="#2980b9"/>
+		
+	<link rel="icon" type="image/png" href="../assets/img/icon.png"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato"/>
+	
+	<link rel="stylesheet" type="text/css" href="../assets/css/page.css"/>
+</head>
+
+	<body>
+		<div id="content" class="row">
+			<div id="navbar" class="col-md-4 col-lg-3">
+				<header>
+  <h1><span class="logo"></span><a href="../java/">LogicMonitor Java Data SDk</a></h1>
+  
+  <form action="../search.html" method="get">
+    <input class="form-control" name="keywords" placeholder="Search..." type="text">
+  </form>
+  
+</header>
+
+<div class="d-md-none clearfix" id="mobile-bar">
+  <i aria-hidden="true" class="fa fa-bars"></i>
+</div>
+
+<div class="d-none d-md-block" id="navigation">
+  <nav>
+    <ul>
+<li>
+<a href="MetricsIngestion.html">Metrics Example</a>
+</li>
+
+<li>
+<a href="LogIngestion.html">Logs Example</a>
+</li>
+
+
+</ul>
+
+  </nav>
+
+  <footer class="col-md-4 col-lg-3">
+    Copyright © 2008-2022 Logicmonitor Inc.
+  </footer>
+</div>
+			</div>
+			<div id="article" class="col-md-8 col-lg-9">
+				<article class="col-md-12 col-lg-9">
+					<section class="clearfix" id="article-header">
+  <ul class="links">
+    <li><small><a class="text-muted" href="https://github.com/logicmonitor/lm-data-sdk-java">Start it on Github</a></small>
+    </li>
+  </ul>
+</section>
+					<section>
+						<h1 id="the-logicmonitor-java-data-library">The LogicMonitor Java Data library</h1>
+<p>This Java Library is suitable for ingesting the metrics or logs into the LogicMonitor Platform.</p>
+<h2 id="overview">Overview</h2>
+<p>LogicMonitor's Push Metrics feature allows you to send metrics directly
+to the LogicMonitor platform via a dedicated API, removing the need to
+route the data through a LogicMonitor Collector. Once ingested, these
+metrics are presented alongside all other metrics gathered via
+LogicMonitor, providing a single pane of glass for metric monitoring and
+alerting.</p>
+<p>Similarly, If a log integration isn’t available or you have custom logs that you want to analyze,
+you can send the logs directly to your LogicMonitor account via the logs ingestion API.</p>
+<h2 id="quick-start-notes">Quick Start Notes:</h2>
+<h3 id="build">Build</h3>
+<p><code>./gradlew clean build publishToMavenLocal</code></p>
+<p>Above command will build the sdk and install in your local maven repository.</p>
+<h3 id="use">Use</h3>
+<h4 id="gradle">Gradle</h4>
+<pre><code class="language-groovy">dependencies {
+    implementation('com.logicmonitor:lm-data-sdk:0.0.1-alpha')
+}
+</code></pre>
+<h4 id="maven">Maven</h4>
+<pre><code class="language-xml">
+&lt;dependency&gt;
+  &lt;groupId&gt;com.logicmonitor&lt;/groupId&gt;
+  &lt;artifactId&gt;lm-data-sdk&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-alpha&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h3 id="set-configurations">Set Configurations</h3>
+<p>SDK must be configured with LogicMonitor.DataSDK Configuration class. While using LMv1 authentication set LM_ACCESS_ID and
+LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TOKEN property. Company's name or Account
+name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.</p>
+<table>
+<thead>
+<tr><th>Environment variable</th><th align="right">Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>LM_COMPANY</code></td><td align="right">Account name (Company Name) is your organization name</td></tr>
+<tr><td><code>LM_ACCESS_ID</code></td><td align="right">Access id while using LMv1 authentication.</td></tr>
+<tr><td><code>LM_ACCESS_KEY</code></td><td align="right">Access key while using LMv1 authentication.</td></tr>
+<tr><td><code>LM_BEARER_TOKEN</code></td><td align="right">BearerToken while using Bearer authentication.</td></tr>
+</tbody>
+</table>
+<h3 id="read-the-metricslogs-example-to-use-metricslogs-ingestion-api">Read the Metrics/Logs example to use Metrics/Logs ingestion API.</h3>
+<h3 id="see-the-project-repository-at-github">See the project repository at <a href="https://github.com/logicmonitor/lm-data-sdk-java">GitHub</a>.</h3>
+<h2 id="get-in-touch">Get in Touch</h2>
+<p>If you have questions in general, reach out to our <a href="https://support@logicmonitor.com">support</a></p>
+<hr />
+<p>Copyright, 2022, LogicMonitor, Inc.</p>
+<p>This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL
+was not distributed with this file, You can obtain
+one at <a href="https://mozilla.org/MPL/2.0/">https://mozilla.org/MPL/2.0/</a>.</p>
+
+					</section>
+					
+				</article>
+			</div>
+		</div>
+		
+		<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js"></script>
+<script src="../assets/js/page.js"></script>
+
+	<script src="../assets/localization/java.js"></script>
+
+		
+	</body>
+</html>

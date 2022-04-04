@@ -1,0 +1,4 @@
+project_name: LogicMonitor Java Data SDk
+project_description: This SDK is for ingestion of the metrics into LogicMonitor platform.
+project_url: index.html
+default_language: java

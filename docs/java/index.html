@@ -96,12 +96,10 @@ alerting.</p>
 <p>Similarly, If a log integration isn’t available or you have custom logs that you want to analyze,
 you can send the logs directly to your LogicMonitor account via the logs ingestion API.</p>
 <h2 id="quick-start-notes">Quick Start Notes:</h2>
-<h3 id="build">Build</h3>
-<p><code>./gradlew clean build publishToMavenLocal</code></p>
-<p>Above command will build the sdk and install in your local maven repository.</p>
-<h3 id="use">Use</h3>
+<h4 id="build"><a href="https://github.com/orgs/logicmonitor/packages?repo_name=lm-data-sdk-java">Use GitHub Package</a></h4>
+<p>Add the package dependencies to your build.gradle or pom.xml</p>
 <h4 id="gradle">Gradle</h4>
-<pre><code class="language-groovy">dependencies {
+<pre><code class="language-groovy"> dependencies {
     implementation('com.logicmonitor:lm-data-sdk:0.0.1-alpha')
 }
 </code></pre>

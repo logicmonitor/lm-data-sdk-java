@@ -24,8 +24,8 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Run coverage
-      run: ./gradlew clean codeCoverageReport
+    - name: Build and run coverage
+      run: ./gradlew clean build
 
       # Runs a set of commands using the runners shell
       #- uses: actions/checkout@main
@@ -36,5 +36,3 @@ jobs:
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)      
-    - name: Build with Gradle
-      run: ./gradlew build

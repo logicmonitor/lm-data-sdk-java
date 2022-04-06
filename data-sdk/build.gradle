@@ -1,0 +1,109 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'com.logicmonitor.java-conventions'
+    id 'org.openapi.generator' version '5.3.1'
+    id 'com.diffplug.spotless' version "6.4.0"
+    id 'java-library'
+    id 'jacoco'
+    id 'maven-publish'
+}
+apply from: "${rootProject.projectDir}/gradle/spotless.gradle"
+
+/* java client configuration */
+task buildApiIngestJavaClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "java"
+    inputSpec = "$projectDir/src/main/resources/ingest-api.yaml".toString()
+    outputDir = "$buildDir/java-client".toString()
+
+    groupId = "$project.group"
+    id = "$project.name-java-client"
+    version = "$project.version"
+
+    enablePostProcessFile = true
+    skipOverwrite = false
+    /* Refer for other configOptions https://openapi-generator.tech/docs/generators/java/ */
+    configOptions = [
+            java8            : "true",
+            dateLibrary      : "java8",
+            useBeanValidation: "true"
+    ]
+}
+/*
+task generateCode(type: Copy, dependsOn: ['buildApiIngestJavaClient']) {
+    def srcPath = "$buildDir/java-client"
+    def targetPath = "$rootDir/docs/java-client"
+
+    copy docs
+    from(srcPath + "/docs")
+    into(targetPath)
+    include('*.md')
+}
+*/
+// code will be generated during compilation
+compileJava.dependsOn(buildApiIngestJavaClient)
+
+// attach the generated folder as source for this project
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/java-client/src/main/java"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'io.swagger:swagger-annotations:1.6.4'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation 'io.gsonfire:gson-fire:1.8.5'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'lm-data-sdk'
+        }
+    }
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    allprojects.each {
+        sourceSets it.sourceSets.main
+    }
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: '**/org/openapitools/client/**')
+        }))
+    }
+}
+test.finalizedBy codeCoverageReport
+
+configurations {
+    jar.archiveName ="lm-data-sdk-"+version+".jar"
+}
+
+description = 'data-sdk'

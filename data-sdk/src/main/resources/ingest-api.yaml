@@ -1,0 +1,707 @@
+openapi: 3.0.3
+info:
+  title: LogicMonitor API-Ingest Rest API
+  description: LogicMonitor is a SaaS-based performance monitoring platform that provides full visibility into complex, hybrid infrastructures, offering granular performance monitoring and actionable data and insights. API-Ingest provides the entry point in the form of public rest APIs for ingesting metrics into LogicMonitor. For using this application users have to create LMAuth token using access id and key from santaba.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: LogicMonitor Support Docs
+  url: https://www.logicmonitor.com/support/rest-api-developers-guide/overview/using-logicmonitors-rest-api
+servers:
+  - url: /rest
+tags:
+  - name: LMInstanceProperties
+    description: LMInstancePropertiesAPI is to update instance properties.
+  - name: LMMetricIngest
+    description: LMMetricIngestAPI is to ingest raw metrics.
+  - name: LMResourceProperties
+    description: LMResourcePropertiesAPI is to update resource properties.
+paths:
+  /api/v1/otraces:
+    post:
+      requestBody:
+        content:
+          application/x-thrift:
+            schema:
+              type: array
+              items:
+                format: byte
+                type: string
+      responses:
+        '200':
+          description: OK
+  /api/v1/traces:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          application/x-protobuf:
+            schema:
+              type: array
+              items:
+                format: byte
+                type: string
+      responses:
+        '200':
+          description: OK
+  /instance_property/ingest:
+    put:
+      tags:
+        - LMInstanceProperties
+      summary: UpdateInstancePropertiesAPI
+      description: UpdateInstancePropertiesAPI is for the purpose of updating instance properties for any resource to the LM application. It needs payload of object type RestInstancePropertiesV1. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only PUT and PATCH method will be applied to this API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestInstancePropertiesV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+    patch:
+      tags:
+        - LMInstanceProperties
+      summary: UpdateInstancePropertiesAPI
+      description: UpdateInstancePropertiesAPI is for the purpose of updating instance properties for any resource to the LM application. It needs payload of object type RestInstancePropertiesV1. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only PUT and PATCH method will be applied to this API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestInstancePropertiesV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+  /metric/ingest:
+    post:
+      tags:
+        - LMMetricIngest
+      summary: MetricIngestAPI
+      description: MetricIngestAPI is used for the purpose of ingesting raw metrics to the LM application. It needs metrics in the format of RestMetricsV1 object. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only POST method is applied to this API
+      parameters:
+        - name: create
+          in: query
+          description: Do you want to create resource? true/false
+          schema:
+            default: 'false'
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestMetricsV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+  /resource_property/ingest:
+    put:
+      tags:
+        - LMResourceProperties
+      summary: UpdateResourcePropertiesAPI
+      description: UpdateResourcePropertiesAPI is for the purpose of updating resource properties for any resource to the LM application. It needs payload of object type RestResourcePropertiesV1. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only PUT and PATCH method will be applied to this API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestResourcePropertiesV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+    patch:
+      tags:
+        - LMResourceProperties
+      summary: UpdateResourcePropertiesAPI
+      description: UpdateResourcePropertiesAPI is for the purpose of updating resource properties for any resource to the LM application. It needs payload of object type RestResourcePropertiesV1. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only PUT and PATCH method will be applied to this API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestResourcePropertiesV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+  /v2/metric/ingest:
+    post:
+      tags:
+        - LMMetricIngest
+      summary: MetricIngestAPIV2
+      description: MetricIngestAPIV2 is used for the purpose of ingesting raw metrics to the LM application. It needs metrics in the format of RestMetricsV1[] object. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only POST method is applied to this API
+      parameters:
+        - name: create
+          in: query
+          description: Do you want to create resource? true/false
+          schema:
+            default: 'false'
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/RestMetricsV1'
+      responses:
+        '202':
+          description: The request has been accepted for processing, but the processing has not been completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponseV2'
+        '207':
+          description: Multi status Some events were not accepted. See the 'errors' property for additional information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponseV2'
+        '400':
+          description: Received a bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMetricAPIResponseV2'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '402':
+          description: Push Metrics feature is disabled for company.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '403':
+          description: Invalid user permission.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '404':
+          description: Company not found.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '405':
+          description: HTTP Method Not Allowed.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '415':
+          description: HTTP 415 Unsupported Media Type.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+        '500':
+          description: Something went wrong. Could not process your request right now.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: string
+                  timestamp: 0
+      security:
+        - LMv1: []
+components:
+  schemas:
+    MapStringString:
+      type: object
+      additionalProperties:
+        type: string
+    RestInstancePropertiesV1:
+      type: object
+      properties:
+        dataSource:
+          type: string
+        dataSourceDisplayName:
+          type: string
+        dataSourceId:
+          format: int32
+          type: integer
+        instanceId:
+          format: int32
+          type: integer
+        instanceName:
+          type: string
+        instanceProperties:
+          $ref: '#/components/schemas/MapStringString'
+        resourceIds:
+          $ref: '#/components/schemas/MapStringString'
+    PushMetricAPIResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        resourceIds:
+          $ref: '#/components/schemas/MapStringString'
+        timestamp:
+          format: int64
+          type: integer
+    RestResourcePropertiesV1:
+      type: object
+      properties:
+        resourceIds:
+          $ref: '#/components/schemas/MapStringString'
+        resourceName:
+          type: string
+        resourceProperties:
+          $ref: '#/components/schemas/MapStringString'
+    RestDataSourceInstanceV1:
+      type: object
+      properties:
+        dataPoints:
+          $ref: '#/components/schemas/ListRestDataPointV1'
+        instanceDescription:
+          type: string
+        instanceDisplayName:
+          type: string
+        instanceGroup:
+          type: string
+        instanceId:
+          format: int32
+          type: integer
+        instanceName:
+          type: string
+        instanceProperties:
+          $ref: '#/components/schemas/MapStringString'
+        instanceWildValue:
+          type: string
+    ListRestDataSourceInstanceV1:
+      type: array
+      items:
+        $ref: '#/components/schemas/RestDataSourceInstanceV1'
+    RestDataPointV1:
+      type: object
+      properties:
+        dataPointAggregationType:
+          type: string
+        dataPointDescription:
+          type: string
+        dataPointName:
+          type: string
+        dataPointType:
+          type: string
+        percentileValue:
+          format: int32
+          type: integer
+        values:
+          $ref: '#/components/schemas/MapStringString'
+    ListRestDataPointV1:
+      type: array
+      items:
+        $ref: '#/components/schemas/RestDataPointV1'
+    RestMetricsV1:
+      type: object
+      properties:
+        dataSource:
+          type: string
+        dataSourceDisplayName:
+          type: string
+        dataSourceGroup:
+          type: string
+        dataSourceId:
+          format: int32
+          type: integer
+        instances:
+          $ref: '#/components/schemas/ListRestDataSourceInstanceV1'
+        resourceDescription:
+          type: string
+        resourceIds:
+          $ref: '#/components/schemas/MapStringString'
+        resourceName:
+          type: string
+        resourceProperties:
+          $ref: '#/components/schemas/MapStringString'
+        singleInstanceDS:
+          type: boolean
+    PushMetricErrorResponse:
+      type: object
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+        resourceIds:
+          $ref: '#/components/schemas/MapStringString'
+    ListPushMetricErrorResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PushMetricErrorResponse'
+    PushMetricAPIResponseV2:
+      type: object
+      properties:
+        code:
+          format: int32
+          type: integer
+        errors:
+          $ref: '#/components/schemas/ListPushMetricErrorResponse'
+        message:
+          type: string
+        timestamp:
+          format: int64
+          type: integer
+  securitySchemes:
+    LMv1:
+      type: apiKey
+      description: Provide LMv1 token here for accessing API
+      name: Authorization
+      in: header

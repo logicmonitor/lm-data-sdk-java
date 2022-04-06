@@ -1,0 +1,14 @@
+{% if page.hasPreviousPage() or page.hasNextPage() %}
+<section class="clearfix" id="pagination">
+	{% if page.hasPreviousPage() %}
+	<a class="text-muted previous" href="{{ page.getPreviousPage() }}"><i aria-hidden="true"
+																																				class="fa fa-caret-left"></i>
+		<span>Previous</span></a>
+	{% endif %}
+
+	{% if page.hasNextPage() %}
+	<a class="text-muted next" href="{{ page.getNextPage() }}"><span>Next</span> <i
+			aria-hidden="true" class="fa fa-caret-right"></i></a>
+	{% endif %}
+</section>
+{% endif %}

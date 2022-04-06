@@ -1,0 +1,5 @@
+
+rootProject.name = 'lm-data-sdk-java'
+
+include(':data-sdk')
+include(':examples')

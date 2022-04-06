@@ -1,0 +1,23 @@
+<header>
+  <h1><span class="logo"></span><a href="{{ page.getRootRelativeURL() }}{{ page.getLanguage() }}/">{{
+    project.getName() }}</a></h1>
+  {% if project.hasLunrSearch() %}
+  <form action="{{ page.getRootRelativeURL() }}search.html" method="get">
+    <input class="form-control" name="keywords" placeholder="Search..." type="text">
+  </form>
+  {% endif %}
+</header>
+
+<div class="d-md-none clearfix" id="mobile-bar">
+  <i aria-hidden="true" class="fa fa-bars"></i>
+</div>
+
+<div class="d-none d-md-block" id="navigation">
+  <nav>
+    {{ page.getMenu() }}
+  </nav>
+
+  <footer class="col-md-4 col-lg-3">
+    Copyright © 2008-2022 Logicmonitor Inc.
+  </footer>
+</div>

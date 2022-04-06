@@ -1,0 +1,10 @@
+- title: 'Metrics Example'
+  link: 'MetricsIngestion.html'
+  weight: 1
+
+- title: 'Logs Example'
+  link: 'LogIngestion.html'
+  weight: 1
+
+
+

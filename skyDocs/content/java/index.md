@@ -16,13 +16,9 @@ you can send the logs directly to your LogicMonitor account via the logs ingesti
 
 ## Quick Start Notes:
 
-### Build
+### Use [GitHub Package](https://github.com/orgs/logicmonitor/packages?repo_name=lm-data-sdk-java)
 
-` ./gradlew clean build publishToMavenLocal `
-
-Above command will build the sdk and install in your local maven repository.
-
-### Use
+Add the package dependencies to your build.gradle or pom.xml
 
 #### Gradle
 
@@ -48,13 +44,13 @@ LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TO
 name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.
 
 |      Environment variable      |  Description |
-|-------------|------:|
+|-------------|:------|
 |  `LM_COMPANY` |  Account name (Company Name) is your organization name |
 |  `LM_ACCESS_ID` |  Access id while using LMv1 authentication.  |
 |  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication.|
 |  `LM_BEARER_TOKEN` |    BearerToken while using Bearer authentication. |
 
-### Read the Metrics/Logs example to use Metrics/Logs ingestion API.
+### Read the [Metrics](https://logicmonitor.github.io/lm-data-sdk-java/java/MetricsIngestion.html) / [Logs](https://logicmonitor.github.io/lm-data-sdk-java/java/LogIngestion.html) example to use Metrics/Logs ingestion API.
 
 ### See the project repository at [GitHub](https://github.com/logicmonitor/lm-data-sdk-java).
 

@@ -96,12 +96,10 @@ alerting.</p>
 <p>Similarly, If a log integration isn’t available or you have custom logs that you want to analyze,
 you can send the logs directly to your LogicMonitor account via the logs ingestion API.</p>
 <h2 id="quick-start-notes">Quick Start Notes:</h2>
-<h3 id="build">Build</h3>
-<p><code>./gradlew clean build publishToMavenLocal</code></p>
-<p>Above command will build the sdk and install in your local maven repository.</p>
-<h3 id="use">Use</h3>
+<h4 id="build"><a href="https://github.com/orgs/logicmonitor/packages?repo_name=lm-data-sdk-java">Use GitHub Package</a></h4>
+<p>Add the package dependencies to your build.gradle or pom.xml</p>
 <h4 id="gradle">Gradle</h4>
-<pre><code class="language-groovy">dependencies {
+<pre><code class="language-groovy"> dependencies {
     implementation('com.logicmonitor:lm-data-sdk:0.0.1-alpha')
 }
 </code></pre>
@@ -119,13 +117,13 @@ LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TO
 name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.</p>
 <table>
 <thead>
-<tr><th>Environment variable</th><th align="right">Description</th></tr>
+<tr><th>Environment variable</th><th align="left">Description</th></tr>
 </thead>
 <tbody>
-<tr><td><code>LM_COMPANY</code></td><td align="right">Account name (Company Name) is your organization name</td></tr>
-<tr><td><code>LM_ACCESS_ID</code></td><td align="right">Access id while using LMv1 authentication.</td></tr>
-<tr><td><code>LM_ACCESS_KEY</code></td><td align="right">Access key while using LMv1 authentication.</td></tr>
-<tr><td><code>LM_BEARER_TOKEN</code></td><td align="right">BearerToken while using Bearer authentication.</td></tr>
+<tr><td><code>LM_COMPANY</code></td><td align="left">Account name (Company Name) is your organization name</td></tr>
+<tr><td><code>LM_ACCESS_ID</code></td><td align="left">Access id while using LMv1 authentication.</td></tr>
+<tr><td><code>LM_ACCESS_KEY</code></td><td align="left">Access key while using LMv1 authentication.</td></tr>
+<tr><td><code>LM_BEARER_TOKEN</code></td><td align="left">BearerToken while using Bearer authentication.</td></tr>
 </tbody>
 </table>
 <h3 id="read-the-metricslogs-example-to-use-metricslogs-ingestion-api">Read the Metrics/Logs example to use Metrics/Logs ingestion API.</h3>

@@ -84,11 +84,12 @@ public abstract class BatchingCache {
         response, response.getStatusCode(), response.getHeaders().toString());
 
     if (response != null) {
-      if (response.getStatusCode() == 200
-          || response.getStatusCode() == 202
-          || response.getStatusCode() == 207)
+      if ((response.getStatusCode() == 200
+              || response.getStatusCode() == 202
+              || response.getStatusCode() == 207)
+          && apiCallback != null)
         apiCallback.onSuccess(response, response.getStatusCode(), response.getHeaders());
-      if (response.getStatusCode() >= 300)
+      if (response.getStatusCode() >= 300 && apiCallback != null)
         apiCallback.onFailure(apiException, response.getStatusCode(), response.getHeaders());
     }
   }

@@ -1,5 +1,10 @@
 # The LogicMonitor Java Data library
 
+
+---------------------------------------------------------------------------------------------------------
+[![Java CI with Gradle](https://github.com/logicmonitor/lm-data-sdk-java/actions/workflows/gradle.yml/badge.svg)](https://github.com/logicmonitor/lm-data-sdk-java/actions/workflows/gradle.yml)
+[![codecov](https://codecov.io/gh/logicmonitor/lm-data-sdk-java/branch/main/graph/badge.svg?token=Wz3CKLkJgA)](https://codecov.io/gh/logicmonitor/lm-data-sdk-java)
+
 This Java Library is suitable for ingesting the metrics or logs into the LogicMonitor Platform.
 
 ## Overview
@@ -16,13 +21,9 @@ you can send the logs directly to your LogicMonitor account via the logs ingesti
 
 ## Quick Start Notes:
 
-### Build
+### Use [GitHub Package](https://github.com/orgs/logicmonitor/packages?repo_name=lm-data-sdk-java)
 
-` ./gradlew clean build publishToMavenLocal `
-
-Above command will build the sdk and install in your local maven repository.
-
-### Use
+Add the package dependencies to your build.gradle or pom.xml
 
 #### Gradle
 
@@ -54,7 +55,7 @@ name <b>must</b> be passed to LM_COMPANY property. All properties can be set usi
 |  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication. |
 |  `LM_BEARER_TOKEN` |    BearerToken while using Bearer authentication.|
 
-### Read the Library Documentation to use Metrics/Logs ingestion API.
+### Read the [Library Documentation](https://logicmonitor.github.io/lm-data-sdk-java/) to use Metrics/Logs ingestion API.
 
 ## Get in Touch
 

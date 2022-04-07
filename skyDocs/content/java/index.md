@@ -44,7 +44,7 @@ LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TO
 name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.
 
 |      Environment variable      |  Description |
-|-------------|------:|
+|-------------|:------|
 |  `LM_COMPANY` |  Account name (Company Name) is your organization name |
 |  `LM_ACCESS_ID` |  Access id while using LMv1 authentication.  |
 |  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication.|

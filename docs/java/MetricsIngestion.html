@@ -128,17 +128,17 @@ To determine if user is sending bathing request or single request, we have boole
 </ul>
 <pre><code class="language-java">Resource resource = new Resource(ids, name, description, properties, create);
 </code></pre>
-<p><b>Ids(Dictonary&lt;string,string&gt;):</b> <br>An Dictionary of existing resource properties that will be
+<p><b>Ids(Dictonary&lt;String, String&gt;):</b> <br>An Dictionary of existing resource properties that will be
 used to identify the resource. See Managing Resources that Ingest Push Metrics for information on
 the types of properties that can be used. If no resource is matched and the create parameter is set
 to TRUE, a new resource is created with these specified resource IDs set on it. If the
 system.displayname and/or system.hostname property is included as resource IDs, they will be used as
 host name and display name respectively in the resulting resource.</p>
-<p><b>Name(string):</b> <br>Resource unique name. Only considered when creating a new resource.</p>
-<p><b>Properties(Dictonary&lt;string,string&gt;):</b> <br>New properties for resource. Updates to existing
+<p><b>Name(String):</b> <br>Resource unique name. Only considered when creating a new resource.</p>
+<p><b>Properties(Dictonary&lt;String, String&gt;):</b> <br>New properties for resource. Updates to existing
 resource properties are not considered. Depending on the property name, we will convert these
 properties into system, auto, or custom properties.</p>
-<p><b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.</p>
+<p><b>Description(String):</b>  <br>Resource description. Only considered when creating a new resource.</p>
 <p><b>Create(bool):</b> <br>Do you want to create the resource.</p>
 <ul>
 <li>
@@ -147,10 +147,10 @@ properties into system, auto, or custom properties.</p>
 </ul>
 <pre><code class="language-java">DataSource dataSource = new DataSource(dataSourceName, dataSourceGroup, displayName, id);
 </code></pre>
-<p><b>Name(string):</b>  <br>DataSource unique name. Used to match an existing DataSource. If no existing
+<p><b>Name(String):</b>  <br>DataSource unique name. Used to match an existing DataSource. If no existing
 DataSource matches the name provided here, a new DataSource is created with this name.</p>
-<p><b>DisplayName(string):</b> <br>DataSource display name. Only considered when creating a new DataSource.</p>
-<p><b>Group(string):</b> <br>DataSource group name. Only considered when DataSource does not already belong
+<p><b>DisplayName(String):</b> <br>DataSource display name. Only considered when creating a new DataSource.</p>
+<p><b>Group(String):</b> <br>DataSource group name. Only considered when DataSource does not already belong
 to a group. Used to organize the DataSource within a DataSource group. If no existing DataSource
 group matches, a new group is created with this name and the DataSource is organized under the new
 group.</p>
@@ -163,13 +163,13 @@ DataSource matches the provided ID, an error results.</p>
 </ul>
 <pre><code class="language-java">DataSourceInstance dataSourceInstance = new DataSourceInstance(name, displayName, description, properties);
 </code></pre>
-<p><b>Name(string):</b> <br>Instance name. If no existing instance matches, a new instance is created with
+<p><b>Name(String):</b> <br>Instance name. If no existing instance matches, a new instance is created with
 this name.</p>
-<p><b>DisplayName(string):</b> <br>Instance display name. Only considered when creating a new instance.</p>
-<p><b>Properties(Dictionary&lt;string,string&gt;):</b> <br>New properties for instance. Updates to existing
+<p><b>DisplayName(String):</b> <br>Instance display name. Only considered when creating a new instance.</p>
+<p><b>Properties(Dictionary&lt;String, String&gt;):</b> <br>New properties for instance. Updates to existing
 instance properties are not considered. Depending on the property name, we will convert these
 properties into system, auto, or custom properties.</p>
-<p><b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.</p>
+<p><b>Description(String):</b>  <br>Resource description. Only considered when creating a new resource.</p>
 <ul>
 <li>
 <h3 id="datapoint">DataPoint</h3>
@@ -177,22 +177,22 @@ properties into system, auto, or custom properties.</p>
 </ul>
 <pre><code class="language-java">DataPoint dataPoint = new DataPoint(name, description, aggregationType, description);
 </code></pre>
-<p><b>Name(string):</b><br> Datapoint name. If no existing datapoint matches for specified DataSource, a
+<p><b>Name(String):</b><br> Datapoint name. If no existing datapoint matches for specified DataSource, a
 new datapoint is created with this name.</p>
-<p><b>AggreationType(string):</b><br>The aggregation method, if any, that should be used if data is pushed
-in sub-minute intervals. Allowed options are “sum”, “average” and “none”(default) where “none” would
+<p><b>AggregationType(String):</b><br>The aggregation method, if any, that should be used if data is pushed
+in sub-minute intervals. Allowed options are “sum”, “average”, "percentile" and “none”(default) where “none” would
 take last value for that minute. Only considered when creating a new datapoint. See the About the
 Push Metrics REST API section of this guide for more information on datapoint value aggregation
 intervals.</p>
-<p><b>Description(string):</b> <br>Datapoint description. Only considered when creating a new datapoint.</p>
-<p><b>Type(string):</b><br> Metric type as a number in string format. Allowed options are “guage” (default)
+<p><b>Description(String):</b> <br>Datapoint description. Only considered when creating a new datapoint.</p>
+<p><b>Type(String):</b><br> Metric type as a number in String format. Allowed options are “guage” (default)
 and “counter”. Only considered when creating a new datapoint.</p>
 <ul>
 <li>
 <h3 id="value">Value</h3>
 </li>
 </ul>
-<pre><code class="language-java">Map&lt;String, strinStringg&gt; value = new HashMap&lt;&gt;();
+<pre><code class="language-java">Map&lt;String, String&gt; value = new HashMap&lt;&gt;();
 </code></pre>
 <p>Value is a dictionary which stores the time of data emittion(in epoch) as Key of dictionary and
 Metric Data as Value of dictionary.</p>

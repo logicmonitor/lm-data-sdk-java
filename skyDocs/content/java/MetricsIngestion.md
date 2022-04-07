@@ -53,20 +53,20 @@ Read below for understanding more about Models in SDK.
 Resource resource = new Resource(ids, name, description, properties, create);
 ```
 
-<b>Ids(Dictonary<string,string>):</b> <br>An Dictionary of existing resource properties that will be
+<b>Ids(Dictonary<String, String>):</b> <br>An Dictionary of existing resource properties that will be
 used to identify the resource. See Managing Resources that Ingest Push Metrics for information on
 the types of properties that can be used. If no resource is matched and the create parameter is set
 to TRUE, a new resource is created with these specified resource IDs set on it. If the
 system.displayname and/or system.hostname property is included as resource IDs, they will be used as
 host name and display name respectively in the resulting resource.
 
-<b>Name(string):</b> <br>Resource unique name. Only considered when creating a new resource.
+<b>Name(String):</b> <br>Resource unique name. Only considered when creating a new resource.
 
-<b>Properties(Dictonary<string,string>):</b> <br>New properties for resource. Updates to existing
+<b>Properties(Dictonary<String, String>):</b> <br>New properties for resource. Updates to existing
 resource properties are not considered. Depending on the property name, we will convert these
 properties into system, auto, or custom properties.
 
-<b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.
+<b>Description(String):</b>  <br>Resource description. Only considered when creating a new resource.
 
 <b>Create(bool):</b> <br>Do you want to create the resource.
 
@@ -76,10 +76,10 @@ properties into system, auto, or custom properties.
 DataSource dataSource = new DataSource(dataSourceName, dataSourceGroup, displayName, id);
 ```
 
-<b>Name(string):</b>  <br>DataSource unique name. Used to match an existing DataSource. If no existing
+<b>Name(String):</b>  <br>DataSource unique name. Used to match an existing DataSource. If no existing
 DataSource matches the name provided here, a new DataSource is created with this name.
 
-<b>DisplayName(string):</b> <br>DataSource display name. Only considered when creating a new DataSource.
+<b>DisplayName(String):</b> <br>DataSource display name. Only considered when creating a new DataSource.
 
 <b>Group(string):</b> <br>DataSource group name. Only considered when DataSource does not already belong
 to a group. Used to organize the DataSource within a DataSource group. If no existing DataSource
@@ -95,16 +95,16 @@ DataSource matches the provided ID, an error results.
 DataSourceInstance dataSourceInstance = new DataSourceInstance(name, displayName, description, properties);
 ```
 
-<b>Name(string):</b> <br>Instance name. If no existing instance matches, a new instance is created with
+<b>Name(String):</b> <br>Instance name. If no existing instance matches, a new instance is created with
 this name.
 
-<b>DisplayName(string):</b> <br>Instance display name. Only considered when creating a new instance.
+<b>DisplayName(String):</b> <br>Instance display name. Only considered when creating a new instance.
 
-<b>Properties(Dictionary<string,string>):</b> <br>New properties for instance. Updates to existing
+<b>Properties(Dictionary<String, String>):</b> <br>New properties for instance. Updates to existing
 instance properties are not considered. Depending on the property name, we will convert these
 properties into system, auto, or custom properties.
 
-<b>Description(string):</b>  <br>Resource description. Only considered when creating a new resource.
+<b>Description(String):</b>  <br>Resource description. Only considered when creating a new resource.
 
 - ### DataPoint
 
@@ -112,24 +112,24 @@ properties into system, auto, or custom properties.
 DataPoint dataPoint = new DataPoint(name, description, aggregationType, description);
 ```
 
-<b>Name(string):</b><br> Datapoint name. If no existing datapoint matches for specified DataSource, a
+<b>Name(String):</b><br> Datapoint name. If no existing datapoint matches for specified DataSource, a
 new datapoint is created with this name.
 
-<b>AggreationType(string):</b><br>The aggregation method, if any, that should be used if data is pushed
-in sub-minute intervals. Allowed options are “sum”, “average” and “none”(default) where “none” would
+<b>AggregationType(String):</b><br>The aggregation method, if any, that should be used if data is pushed
+in sub-minute intervals. Allowed options are “sum”, “average” , "percentile" and “none”(default) where “none” would
 take last value for that minute. Only considered when creating a new datapoint. See the About the
 Push Metrics REST API section of this guide for more information on datapoint value aggregation
 intervals.
 
-<b>Description(string):</b> <br>Datapoint description. Only considered when creating a new datapoint.
+<b>Description(String):</b> <br>Datapoint description. Only considered when creating a new datapoint.
 
-<b>Type(string):</b><br> Metric type as a number in string format. Allowed options are “guage” (default)
+<b>Type(String):</b><br> Metric type as a number in String format. Allowed options are “guage” (default)
 and “counter”. Only considered when creating a new datapoint.
 
 - ### Value
 
 ```java
-Map<String, strinStringg> value = new HashMap<>();
+Map<String, String> value = new HashMap<>();
 ```
 
 Value is a dictionary which stores the time of data emittion(in epoch) as Key of dictionary and

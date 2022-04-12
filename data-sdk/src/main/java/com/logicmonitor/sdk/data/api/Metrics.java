@@ -11,6 +11,9 @@ import com.logicmonitor.sdk.data.ApiClientUserAgent;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.internal.BatchingCache;
 import com.logicmonitor.sdk.data.model.*;
+import com.logicmonitor.sdk.data.validator.DataSourceInstanceValidator;
+import com.logicmonitor.sdk.data.validator.DataSourceValidator;
+import com.logicmonitor.sdk.data.validator.ResourceValidator;
 import com.logicmonitor.sdk.data.validator.Validator;
 import java.io.IOException;
 import java.util.*;
@@ -38,6 +41,13 @@ public class Metrics extends BatchingCache {
   private ApiClient apiClient = new ApiClient();
 
   private Validator validator = new Validator();
+
+  private ResourceValidator resourceValidator = new ResourceValidator();
+
+  private DataSourceValidator dataSourceValidator = new DataSourceValidator();
+
+  private DataSourceInstanceValidator dataSourceInstanceValidator =
+      new DataSourceInstanceValidator();
 
   public Metrics() {
     this(Configuration.getConfiguration());
@@ -300,6 +310,80 @@ public class Metrics extends BatchingCache {
     }
   }
 
+  /**
+   * @param resourceIds
+   * @param resourceProperties
+   * @param patch
+   * @return ApiResponse
+   * @throws ApiException
+   */
+  public ApiResponse<String> updateResourceProperties(
+      Map<String, String> resourceIds, Map<String, String> resourceProperties, boolean patch)
+      throws ApiException {
+    BatchingCache batchingCache = new Metrics();
+
+    String path = "/resource_property/ingest";
+    String method = patch ? "PATCH" : "PUT";
+    List<RestMetricsV1> listOfRestMetricsV1 = new ArrayList<>();
+
+    if (resourceIds != null) {
+      resourceValidator.checkResourceIdsValidation(resourceIds);
+    }
+
+    if (resourceProperties != null) {
+      resourceValidator.checkResourcePropertiesValidation(resourceProperties);
+    }
+    RestMetricsV1 restMetrics =
+        new RestMetricsV1().resourceIds(resourceIds).resourceProperties(resourceProperties);
+
+    listOfRestMetricsV1.add(restMetrics);
+
+    return batchingCache.makeRequest(
+        listOfRestMetricsV1, path, method, false, Configuration.getAsyncRequest());
+  }
+
+  /**
+   * @param resourceIds
+   * @param dataSourceName
+   * @param dataSourceDisplayName
+   * @param instanceName
+   * @param instanceProperties
+   * @param patch
+   * @return ApiResponse
+   * @throws ApiException
+   */
+  public ApiResponse<String> updateInstanceProperties(
+      Map<String, String> resourceIds,
+      String dataSourceName,
+      String dataSourceDisplayName,
+      String instanceName,
+      Map<String, String> instanceProperties,
+      boolean patch)
+      throws ApiException {
+
+    BatchingCache batchingCache = new Metrics();
+    List<RestMetrics> restMetricsList = new ArrayList<>();
+    String path = "/instance_property/ingest";
+    String method = patch ? "PATCH" : "PUT";
+    if (resourceIds != null) resourceValidator.checkResourceIdsValidation(resourceIds);
+    if (dataSourceName != null) dataSourceValidator.checkDataSourceNameValidation(dataSourceName);
+    if (instanceName != null) dataSourceInstanceValidator.checkInstanceNameValidation(instanceName);
+    if (instanceProperties != null)
+      dataSourceInstanceValidator.checkInstancePropertiesValidation(instanceProperties);
+
+    RestMetrics restMetrics = new RestMetrics();
+    restMetrics.setResourceIds(resourceIds);
+    restMetrics.setDataSource(dataSourceName);
+    restMetrics.setDataSourceDisplayName(dataSourceDisplayName);
+    restMetrics.setInstanceName(instanceName);
+    restMetrics.setInstanceProperties(instanceProperties);
+
+    restMetricsList.add(restMetrics);
+
+    return batchingCache.makeRequest(
+        restMetricsList, path, method, false, Configuration.getAsyncRequest());
+  }
+
   /** return void. */
   @SneakyThrows
   @Override
@@ -315,5 +399,21 @@ public class Metrics extends BatchingCache {
   /** @param client */
   public void setApiClient(ApiClient client) {
     this.apiClient = client;
+  }
+
+  /** @param resourceValidator */
+  public void setResourceValidator(ResourceValidator resourceValidator) {
+    this.resourceValidator = resourceValidator;
+  }
+
+  /** @param dataSourceValidator */
+  public void setDataSourceValidator(DataSourceValidator dataSourceValidator) {
+    this.dataSourceValidator = dataSourceValidator;
+  }
+
+  /** @param dataSourceInstanceValidator */
+  public void setDataSourceInstanceValidator(
+      DataSourceInstanceValidator dataSourceInstanceValidator) {
+    this.dataSourceInstanceValidator = dataSourceInstanceValidator;
   }
 }

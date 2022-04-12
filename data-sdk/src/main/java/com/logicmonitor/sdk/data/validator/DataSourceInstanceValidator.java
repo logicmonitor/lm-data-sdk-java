@@ -12,9 +12,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /** This Class is used check validation for DataSourceInstance . */
 @Builder
+@NoArgsConstructor
 public class DataSourceInstanceValidator implements AttributesValidator<DataSourceInstance> {
 
   private static final String REGEX_INSTANCE_NAME = "^[a-z:A-Z0-9\\._\\-]+$";
@@ -61,7 +63,7 @@ public class DataSourceInstanceValidator implements AttributesValidator<DataSour
    * @param instanceName
    * @return
    */
-  protected String checkInstanceNameValidation(String instanceName) {
+  public String checkInstanceNameValidation(String instanceName) {
     StringBuilder errorMsg = new StringBuilder();
 
     if (passEmptyAndSpellCheck(instanceName)) {
@@ -102,7 +104,7 @@ public class DataSourceInstanceValidator implements AttributesValidator<DataSour
    * @param instanceProperties
    * @return
    */
-  protected String checkInstancePropertiesValidation(Map<String, String> instanceProperties) {
+  public String checkInstancePropertiesValidation(Map<String, String> instanceProperties) {
     StringBuilder errorMsg = new StringBuilder();
 
     if (instanceProperties.size() > 0) {

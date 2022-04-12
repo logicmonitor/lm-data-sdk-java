@@ -164,6 +164,7 @@ public abstract class BatchingCache {
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();
+    Call call;
     if (create && path == PATH) {
       queryParams.add(pair);
     }
@@ -182,19 +183,35 @@ public abstract class BatchingCache {
 
     final String companyUrl = Configuration.setCompany();
     apiClient.setBasePath(companyUrl);
-    Call call =
-        apiClient.buildCall(
-            apiClient.getBasePath(),
-            path,
-            method,
-            queryParams,
-            collectionQueryParams,
-            body,
-            headersParams,
-            cookieParams,
-            formParams,
-            authSetting,
-            apiCallback);
+    if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
+      call =
+          apiClient.buildCall(
+              apiClient.getBasePath(),
+              path,
+              method,
+              queryParams,
+              collectionQueryParams,
+              body.get(0),
+              headersParams,
+              cookieParams,
+              formParams,
+              authSetting,
+              apiCallback);
+    } else {
+      call =
+          apiClient.buildCall(
+              apiClient.getBasePath(),
+              path,
+              method,
+              queryParams,
+              collectionQueryParams,
+              body,
+              headersParams,
+              cookieParams,
+              formParams,
+              authSetting,
+              apiCallback);
+    }
     Type localVarReturnType = new TypeToken<String>() {}.getType();
 
     ApiResponse<String> syncReponse = null;

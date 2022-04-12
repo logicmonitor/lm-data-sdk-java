@@ -11,9 +11,11 @@ import com.logicmonitor.sdk.data.model.Resource;
 import java.util.Map;
 import java.util.regex.Pattern;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /** This Class is used check validation for Resource . */
 @Builder
+@NoArgsConstructor
 public class ResourceValidator implements AttributesValidator<Resource> {
 
   private static final String REGEX_RESOURCE_NAME = "^[a-z:A-Z0-9\\._\\-]+$";
@@ -81,7 +83,7 @@ public class ResourceValidator implements AttributesValidator<Resource> {
    * @param resourceIds This attribute us to set Resource Id
    * @return
    */
-  protected String checkResourceIdsValidation(Map<String, String> resourceIds) {
+  public String checkResourceIdsValidation(Map<String, String> resourceIds) {
     StringBuilder errorMsg = new StringBuilder();
 
     if (resourceIds.size() == 0) {
@@ -114,7 +116,7 @@ public class ResourceValidator implements AttributesValidator<Resource> {
    * @param resourceProperties This attribute us to set Resource Properties
    * @return
    */
-  protected String checkResourcePropertiesValidation(Map<String, String> resourceProperties) {
+  public String checkResourcePropertiesValidation(Map<String, String> resourceProperties) {
     StringBuilder errorMsg = new StringBuilder();
 
     if (resourceProperties.size() == 0) {

@@ -227,7 +227,7 @@ public class TestMetrics {
     metrics.setResourceValidator(resourceValidator);
     ApiResponse<String> response =
         metrics.updateResourceProperties(resourceIds, resource.getProperties(), false);
-    Assertions.assertFalse(false);
+    Assertions.assertEquals(response.getStatusCode(), 400);
   }
 
   @Test(expected = Exception.class)
@@ -244,6 +244,6 @@ public class TestMetrics {
     ApiResponse<String> response =
         metrics.updateInstanceProperties(
             resourceIds, dataSourceName, null, instanceName, instanceProperties, false);
-    Assertions.assertFalse(false);
+    Assertions.assertEquals(response.getStatusCode(), 400);
   }
 }

@@ -183,6 +183,8 @@ public abstract class BatchingCache {
 
     final String companyUrl = Configuration.setCompany();
     apiClient.setBasePath(companyUrl);
+    /*We need this loop as we are using "okhttp3" so body with patch and put is not executed properly, so body.get(0) i.e. object for the same is send.
+    when we are sending list as a body for PATCH and PUT it gives "bad request" as internally we have serialisation for body (in okhttp3) for which body is not formed correctly.*/
     if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
       call =
           apiClient.buildCall(

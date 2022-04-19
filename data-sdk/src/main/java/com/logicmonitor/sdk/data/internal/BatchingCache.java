@@ -176,8 +176,14 @@ public abstract class BatchingCache {
 
     headersParams.put("Accept", apiClient.selectHeaderContentType(localVarContentTypes));
     headersParams.put("Content-Type", apiClient.selectHeaderContentType(localVarContentTypes));
-    headersParams.put(
-        "Authorization", Configuration.getAuthToken(new Gson().toJson(body), method, path));
+    if (method.equalsIgnoreCase("POST")) {
+      headersParams.put(
+          "Authorization", Configuration.getAuthToken(new Gson().toJson(body), method, path));
+    } else {
+      headersParams.put(
+          "Authorization",
+          Configuration.getAuthToken(new Gson().toJson(body.get(0)), method, path));
+    }
 
     log.debug("Request: " + new Gson().toJson(body));
 

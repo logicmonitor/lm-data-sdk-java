@@ -11,9 +11,11 @@ import com.logicmonitor.sdk.data.model.DataSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /** This Class is used check validation for DataSource . */
 @Builder
+@NoArgsConstructor
 public class DataSourceValidator implements AttributesValidator<DataSource> {
 
   private static final String REGEX_INVALID_DATA_SOURCE_NAME = "[^a-zA-Z $#@_0-9:&\\.\\+\n]";
@@ -82,7 +84,7 @@ public class DataSourceValidator implements AttributesValidator<DataSource> {
    * @param dataSource
    * @return
    */
-  protected String checkDataSourceNameValidation(String dataSource) {
+  public String checkDataSourceNameValidation(String dataSource) {
     StringBuilder errorMsg = new StringBuilder();
 
     if (passEmptyAndSpellCheck(dataSource)) {

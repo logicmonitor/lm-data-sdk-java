@@ -24,15 +24,22 @@ public class MetricsIngestion {
         final HashMap<String, String> resourceIds = new HashMap<>();
         resourceIds.put("system.displayname", resourceName);
 
+        final HashMap<String, String> resourceProperties = new HashMap<>();
+        resourceProperties.put("resourceProperties", "Java_Data_SDK_Resource_Property");
+
         final String instanceName = "Java_Data_SDK_Instance";
+
+        final HashMap<String, String> instanceProperties = new HashMap<>();
+        instanceProperties.put("instanceProperties", "Java_Data_SDK_Instance_Property");
+
         final String dataSourceGroup = "Java Data SDK Group";
         final String dataSourceName = "Java Data SDK";
         final String cpuUsage = "cpuUsage";
         final boolean batch = false;
 
-        final Resource resource = Resource.builder().ids(resourceIds).name(resourceName).build();
+        final Resource resource = Resource.builder().ids(resourceIds).name(resourceName).properties(resourceProperties).build();
         final DataSource dataSource = DataSource.builder().name(dataSourceName).group(dataSourceGroup).singleInstanceDS(false).build();
-        final DataSourceInstance dataSourceInstance = DataSourceInstance.builder().name(instanceName).build();
+        final DataSourceInstance dataSourceInstance = DataSourceInstance.builder().name(instanceName).properties(instanceProperties).build();
         final DataPoint dataPoint = DataPoint.builder().name(cpuUsage).build();
         final Map<String, String> cpuUsageValue = new HashMap<>();
         syncExample(resource, dataSource, dataSourceInstance, dataPoint, cpuUsageValue, batch);
@@ -57,6 +64,9 @@ public class MetricsIngestion {
                             "Response: Status: " + response.get().getStatusCode() + " Headers: "
                                     + response.get().getHeaders() + " Data: " + response.get().getData());
                 }
+                metrics.updateResourceProperties(resource.getIds(), resource.getProperties(), true);
+               metrics.updateInstanceProperties(resource.getIds(), dataSource.getName(),dataSource.getDisplayName(), dataSourceInstance.getName(),dataSourceInstance.getProperties(),true);
+
                 response = metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint1, cpuUsageValue);
                 if (response != null && response.isPresent()) {
                     log.debug(

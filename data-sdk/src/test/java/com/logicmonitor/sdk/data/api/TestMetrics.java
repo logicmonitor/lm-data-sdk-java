@@ -14,6 +14,9 @@ import com.logicmonitor.sdk.data.model.DataSourceInstance;
 import com.logicmonitor.sdk.data.model.Input;
 import com.logicmonitor.sdk.data.model.MetricsInput;
 import com.logicmonitor.sdk.data.model.Resource;
+import com.logicmonitor.sdk.data.validator.DataSourceInstanceValidator;
+import com.logicmonitor.sdk.data.validator.DataSourceValidator;
+import com.logicmonitor.sdk.data.validator.ResourceValidator;
 import com.logicmonitor.sdk.data.validator.Validator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +26,11 @@ import java.util.Map;
 import java.util.Queue;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
+import org.openapitools.client.ApiResponse;
 import org.openapitools.client.model.RestDataPointV1;
 import org.openapitools.client.model.RestDataSourceInstanceV1;
 import org.openapitools.client.model.RestMetricsV1;
@@ -214,5 +219,31 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
+  }
+
+  @Test(expected = Exception.class)
+  public void TestUpdateResourceProperties() throws ApiException {
+    ResourceValidator resourceValidator = Mockito.mock(ResourceValidator.class);
+    metrics.setResourceValidator(resourceValidator);
+    ApiResponse<String> response =
+        metrics.updateResourceProperties(resourceIds, resource.getProperties(), false);
+    Assertions.assertEquals(response.getStatusCode(), 400);
+  }
+
+  @Test(expected = Exception.class)
+  public void TestUpdateInstanceProperties() throws ApiException {
+    HashMap<String, String> instanceProperties = new HashMap<>();
+    instanceProperties.put("InstanceProperty", "InstanceProperty");
+    ResourceValidator resourceValidator = Mockito.mock(ResourceValidator.class);
+    DataSourceInstanceValidator dataSourceInstanceValidator =
+        Mockito.mock(DataSourceInstanceValidator.class);
+    DataSourceValidator dataSourceValidator = Mockito.mock(DataSourceValidator.class);
+    metrics.setResourceValidator(resourceValidator);
+    metrics.setDataSourceInstanceValidator(dataSourceInstanceValidator);
+    metrics.setDataSourceValidator(dataSourceValidator);
+    ApiResponse<String> response =
+        metrics.updateInstanceProperties(
+            resourceIds, dataSourceName, null, instanceName, instanceProperties, false);
+    Assertions.assertEquals(response.getStatusCode(), 400);
   }
 }

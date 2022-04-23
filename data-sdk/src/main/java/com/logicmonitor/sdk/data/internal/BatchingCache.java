@@ -164,6 +164,7 @@ public abstract class BatchingCache {
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();
+    Call call;
     if (create && path == PATH) {
       queryParams.add(pair);
     }
@@ -175,26 +176,50 @@ public abstract class BatchingCache {
 
     headersParams.put("Accept", apiClient.selectHeaderContentType(localVarContentTypes));
     headersParams.put("Content-Type", apiClient.selectHeaderContentType(localVarContentTypes));
-    headersParams.put(
-        "Authorization", Configuration.getAuthToken(new Gson().toJson(body), method, path));
+    if (method.equalsIgnoreCase("POST")) {
+      headersParams.put(
+          "Authorization", Configuration.getAuthToken(new Gson().toJson(body), method, path));
+    } else {
+      headersParams.put(
+          "Authorization",
+          Configuration.getAuthToken(new Gson().toJson(body.get(0)), method, path));
+    }
 
     log.debug("Request: " + new Gson().toJson(body));
 
     final String companyUrl = Configuration.setCompany();
     apiClient.setBasePath(companyUrl);
-    Call call =
-        apiClient.buildCall(
-            apiClient.getBasePath(),
-            path,
-            method,
-            queryParams,
-            collectionQueryParams,
-            body,
-            headersParams,
-            cookieParams,
-            formParams,
-            authSetting,
-            apiCallback);
+    /*We need this loop as we are using "okhttp3" so body with patch and put is not executed properly, so body.get(0) i.e. object for the same is send.
+    when we are sending list as a body for PATCH and PUT it gives "bad request" as internally we have serialisation for body (in okhttp3) for which body is not formed correctly.*/
+    if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
+      call =
+          apiClient.buildCall(
+              apiClient.getBasePath(),
+              path,
+              method,
+              queryParams,
+              collectionQueryParams,
+              body.get(0),
+              headersParams,
+              cookieParams,
+              formParams,
+              authSetting,
+              apiCallback);
+    } else {
+      call =
+          apiClient.buildCall(
+              apiClient.getBasePath(),
+              path,
+              method,
+              queryParams,
+              collectionQueryParams,
+              body,
+              headersParams,
+              cookieParams,
+              formParams,
+              authSetting,
+              apiCallback);
+    }
     Type localVarReturnType = new TypeToken<String>() {}.getType();
 
     ApiResponse<String> syncReponse = null;

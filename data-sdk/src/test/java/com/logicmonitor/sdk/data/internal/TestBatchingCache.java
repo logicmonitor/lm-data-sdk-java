@@ -41,7 +41,9 @@ public class TestBatchingCache {
     ApiResponse<String> expected = null;
     try {
       list.add("body");
-      expected = batchingCache.makeRequest(list, "/v2/metric/ingest", "POST", true, false);
+      expected =
+          batchingCache.makeRequest(
+              list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
     } catch (ApiException e) {
       Assertions.assertThrows(NullPointerException.class, (Executable) expected);
     }

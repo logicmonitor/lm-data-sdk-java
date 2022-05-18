@@ -11,8 +11,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.*;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -157,7 +160,12 @@ public abstract class BatchingCache {
    * @throws ApiException
    */
   public ApiResponse<String> makeRequest(
-      final List body, final String path, final String method, final boolean create, boolean async)
+      final List body,
+      final String path,
+      final String method,
+      final boolean create,
+      boolean async,
+      boolean gZip)
       throws ApiException {
 
     final ApiClient apiClient = new ApiClient();
@@ -219,6 +227,28 @@ public abstract class BatchingCache {
               formParams,
               authSetting,
               apiCallback);
+    }
+
+    if (gZip) {
+      headersParams.put("Content-Encoding", "gzip");
+
+      try {
+
+        byte[] bytes = call.request().body().toString().getBytes(StandardCharsets.UTF_8);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(bytes.length);
+        GZIPOutputStream gzip = new GZIPOutputStream(out);
+        gzip.write(bytes);
+        gzip.flush();
+        gzip.close();
+
+        String compressedString = out.toString(StandardCharsets.UTF_8);
+        System.out.println("Commpressed String is:" + compressedString);
+        System.out.println("Call Length after compression" + call.toString().getBytes().length);
+        System.out.println("Compression size:" + compressedString.getBytes().length);
+
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      }
     }
     Type localVarReturnType = new TypeToken<String>() {}.getType();
 

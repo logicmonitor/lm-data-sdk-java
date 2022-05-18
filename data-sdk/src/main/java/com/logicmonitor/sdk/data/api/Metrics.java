@@ -131,7 +131,8 @@ public class Metrics extends BatchingCache {
         PATH,
         METHOD,
         input.getResource().isCreate(),
-        Configuration.getAsyncRequest());
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /**
@@ -262,7 +263,12 @@ public class Metrics extends BatchingCache {
       if (null != listOfRestMetricsV1CreateTrue && listOfRestMetricsV1CreateTrue.size() > 0) {
         response =
             makeRequest(
-                listOfRestMetricsV1CreateTrue, PATH, METHOD, true, Configuration.getAsyncRequest());
+                listOfRestMetricsV1CreateTrue,
+                PATH,
+                METHOD,
+                true,
+                Configuration.getAsyncRequest(),
+                Configuration.getgZip());
         responseHandler(response);
       }
       if (null != listOfRestMetricsV1CreateFalse && listOfRestMetricsV1CreateFalse.size() > 0) {
@@ -272,7 +278,8 @@ public class Metrics extends BatchingCache {
                 PATH,
                 METHOD,
                 false,
-                Configuration.getAsyncRequest());
+                Configuration.getAsyncRequest(),
+                Configuration.getgZip());
         responseHandler(response);
       }
     } catch (ApiException e) {
@@ -339,7 +346,12 @@ public class Metrics extends BatchingCache {
     listOfRestMetricsV1.add(restMetrics);
 
     return batchingCache.makeRequest(
-        listOfRestMetricsV1, path, method, false, Configuration.getAsyncRequest());
+        listOfRestMetricsV1,
+        path,
+        method,
+        false,
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /**
@@ -381,7 +393,12 @@ public class Metrics extends BatchingCache {
     restMetricsList.add(restMetrics);
 
     return batchingCache.makeRequest(
-        restMetricsList, path, method, false, Configuration.getAsyncRequest());
+        restMetricsList,
+        path,
+        method,
+        false,
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /** return void. */

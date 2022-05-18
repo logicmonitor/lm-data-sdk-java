@@ -241,11 +241,6 @@ public abstract class BatchingCache {
         gzip.flush();
         gzip.close();
 
-        String compressedString = out.toString(StandardCharsets.UTF_8);
-        System.out.println("Commpressed String is:" + compressedString);
-        System.out.println("Call Length after compression" + call.toString().getBytes().length);
-        System.out.println("Compression size:" + compressedString.getBytes().length);
-
       } catch (Exception e) {
         log.error(e.getMessage());
       }

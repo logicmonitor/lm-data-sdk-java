@@ -59,7 +59,8 @@ public class Logs extends BatchingCache {
    * @return
    * @throws ApiException
    */
-  protected static ApiResponse singleRequest(final LogsInput logsV1) throws ApiException {
+  protected static ApiResponse singleRequest(final LogsInput logsV1)
+      throws ApiException, IOException {
     JSON json = new JSON();
 
     final List<Map<String, Object>> logBody = new ArrayList<>();
@@ -71,7 +72,7 @@ public class Logs extends BatchingCache {
     logBody.add(body);
 
     final BatchingCache b = new Logs();
-    return b.makeRequest(logBody, PATH, METHOD, true, false);
+    return b.makeRequest(logBody, PATH, METHOD, true, false, Configuration.getgZip());
   }
 
   /** Return void */
@@ -91,7 +92,7 @@ public class Logs extends BatchingCache {
 
     try {
       if (null != list && list.size() > 0) {
-        response = makeRequest(list, PATH, METHOD, true, false);
+        response = makeRequest(list, PATH, METHOD, true, false, Configuration.getgZip());
         responseList.add(response);
         responseHandler(response);
       }

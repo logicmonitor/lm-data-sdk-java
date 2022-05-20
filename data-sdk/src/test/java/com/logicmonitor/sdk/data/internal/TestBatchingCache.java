@@ -10,6 +10,7 @@ package com.logicmonitor.sdk.data.internal;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.Input;
 import com.logicmonitor.sdk.data.model.MetricsInput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,12 +37,14 @@ public class TestBatchingCache {
   Map<String, List<String>> headers = new HashMap<>();
 
   @Test
-  public void testMakeRequest() {
+  public void testMakeRequest() throws IOException {
     List<String> list = new ArrayList<>();
     ApiResponse<String> expected = null;
     try {
       list.add("body");
-      expected = batchingCache.makeRequest(list, "/v2/metric/ingest", "POST", true, false);
+      expected =
+          batchingCache.makeRequest(
+              list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
     } catch (ApiException e) {
       Assertions.assertThrows(NullPointerException.class, (Executable) expected);
     }

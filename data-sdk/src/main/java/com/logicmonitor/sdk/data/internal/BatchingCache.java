@@ -11,8 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -157,8 +161,13 @@ public abstract class BatchingCache {
    * @throws ApiException
    */
   public ApiResponse<String> makeRequest(
-      final List body, final String path, final String method, final boolean create, boolean async)
-      throws ApiException {
+      final List body,
+      final String path,
+      final String method,
+      final boolean create,
+      boolean async,
+      boolean gZip)
+      throws ApiException, IOException {
 
     final ApiClient apiClient = new ApiClient();
     final Pair pair = new Pair("create", String.valueOf(create));
@@ -219,6 +228,30 @@ public abstract class BatchingCache {
               formParams,
               authSetting,
               apiCallback);
+    }
+
+    if (gZip) {
+      headersParams.put("Content-Encoding", "gzip");
+      ByteArrayOutputStream out = null;
+      GZIPOutputStream gzip = null;
+      try {
+
+        byte[] bytes = call.request().body().toString().getBytes(StandardCharsets.UTF_8);
+        out = new ByteArrayOutputStream(bytes.length);
+        gzip = new GZIPOutputStream(out);
+        gzip.write(bytes);
+
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      } finally {
+        if (gzip != null) {
+          gzip.flush();
+          gzip.close();
+        }
+        if (out != null) {
+          out.close();
+        }
+      }
     }
     Type localVarReturnType = new TypeToken<String>() {}.getType();
 

@@ -37,6 +37,8 @@ public class Configuration {
   private static String bearerToken;
   private static Configuration configuration;
 
+  private static boolean gZip = true;
+
   /**
    * LM_COMPANY company name LM_ACCESS_ID Access Id for LMv1 LM_ACCESS_KEY Access key for LMv1
    * LM_BEARER_TOKEN BEARER_TOKEN
@@ -211,5 +213,15 @@ public class Configuration {
   /** @return company */
   public static String getCompany() {
     return company;
+  }
+
+  /** @return gZip */
+  public static boolean getgZip() {
+    return gZip;
+  }
+
+  /** @param gZip */
+  public static void setgZip(boolean gZip) {
+    Configuration.gZip = gZip;
   }
 }

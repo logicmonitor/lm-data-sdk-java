@@ -79,7 +79,7 @@ public class TestLogs {
   }
 
   @Test(expected = ApiException.class)
-  public void testSingleRequest() throws ApiException {
+  public void testSingleRequest() throws ApiException, IOException {
     LogsInput input = new LogsInput("Testing log Api second call", resourceIds, "1789765436", null);
     Logs.singleRequest(input);
   }

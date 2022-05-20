@@ -86,7 +86,7 @@ public class Metrics extends BatchingCache {
    * @return ApiResponse Retruen ApiResponse
    * @throws ApiException Throws ApiException
    */
-  protected ApiResponse<String> singleRequest(MetricsInput input) throws ApiException {
+  protected ApiResponse<String> singleRequest(MetricsInput input) throws ApiException, IOException {
     List<RestMetricsV1> listOfRestMetricsV1 = new ArrayList<>();
     BatchingCache batchingCache = new Metrics();
     List<RestDataPointV1> dataPoints = new ArrayList<>();
@@ -131,7 +131,8 @@ public class Metrics extends BatchingCache {
         PATH,
         METHOD,
         input.getResource().isCreate(),
-        Configuration.getAsyncRequest());
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /**
@@ -183,7 +184,8 @@ public class Metrics extends BatchingCache {
       final Map<
               Resource,
               Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>>>
-          body) {
+          body)
+      throws IOException {
 
     final List<RestMetricsV1> listOfRestMetricsV1CreateTrue = new ArrayList<>();
     final List<RestMetricsV1> listOfRestMetricsV1CreateFalse = new ArrayList<>();
@@ -262,7 +264,12 @@ public class Metrics extends BatchingCache {
       if (null != listOfRestMetricsV1CreateTrue && listOfRestMetricsV1CreateTrue.size() > 0) {
         response =
             makeRequest(
-                listOfRestMetricsV1CreateTrue, PATH, METHOD, true, Configuration.getAsyncRequest());
+                listOfRestMetricsV1CreateTrue,
+                PATH,
+                METHOD,
+                true,
+                Configuration.getAsyncRequest(),
+                Configuration.getgZip());
         responseHandler(response);
       }
       if (null != listOfRestMetricsV1CreateFalse && listOfRestMetricsV1CreateFalse.size() > 0) {
@@ -272,7 +279,8 @@ public class Metrics extends BatchingCache {
                 PATH,
                 METHOD,
                 false,
-                Configuration.getAsyncRequest());
+                Configuration.getAsyncRequest(),
+                Configuration.getgZip());
         responseHandler(response);
       }
     } catch (ApiException e) {
@@ -319,7 +327,7 @@ public class Metrics extends BatchingCache {
    */
   public ApiResponse<String> updateResourceProperties(
       Map<String, String> resourceIds, Map<String, String> resourceProperties, boolean patch)
-      throws ApiException {
+      throws ApiException, IOException {
     BatchingCache batchingCache = new Metrics();
 
     String path = "/resource_property/ingest";
@@ -339,7 +347,12 @@ public class Metrics extends BatchingCache {
     listOfRestMetricsV1.add(restMetrics);
 
     return batchingCache.makeRequest(
-        listOfRestMetricsV1, path, method, false, Configuration.getAsyncRequest());
+        listOfRestMetricsV1,
+        path,
+        method,
+        false,
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /**
@@ -359,7 +372,7 @@ public class Metrics extends BatchingCache {
       String instanceName,
       Map<String, String> instanceProperties,
       boolean patch)
-      throws ApiException {
+      throws ApiException, IOException {
 
     BatchingCache batchingCache = new Metrics();
     List<RestMetrics> restMetricsList = new ArrayList<>();
@@ -381,7 +394,12 @@ public class Metrics extends BatchingCache {
     restMetricsList.add(restMetrics);
 
     return batchingCache.makeRequest(
-        restMetricsList, path, method, false, Configuration.getAsyncRequest());
+        restMetricsList,
+        path,
+        method,
+        false,
+        Configuration.getAsyncRequest(),
+        Configuration.getgZip());
   }
 
   /** return void. */

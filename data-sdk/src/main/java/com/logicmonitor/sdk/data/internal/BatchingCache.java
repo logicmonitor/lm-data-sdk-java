@@ -244,7 +244,7 @@ public abstract class BatchingCache {
       } catch (Exception e) {
         log.error(e.getMessage());
       } finally {
-        if(gzip!=null && out!=null) {
+        if (gzip != null && out != null) {
           gzip.flush();
           gzip.close();
           out.close();

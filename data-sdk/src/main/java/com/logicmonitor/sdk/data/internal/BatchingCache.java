@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -166,7 +167,7 @@ public abstract class BatchingCache {
       final boolean create,
       boolean async,
       boolean gZip)
-      throws ApiException {
+      throws ApiException, IOException {
 
     final ApiClient apiClient = new ApiClient();
     final Pair pair = new Pair("create", String.valueOf(create));
@@ -231,18 +232,23 @@ public abstract class BatchingCache {
 
     if (gZip) {
       headersParams.put("Content-Encoding", "gzip");
-
+      ByteArrayOutputStream out = null;
+      GZIPOutputStream gzip = null;
       try {
 
         byte[] bytes = call.request().body().toString().getBytes(StandardCharsets.UTF_8);
-        ByteArrayOutputStream out = new ByteArrayOutputStream(bytes.length);
-        GZIPOutputStream gzip = new GZIPOutputStream(out);
+        out = new ByteArrayOutputStream(bytes.length);
+        gzip = new GZIPOutputStream(out);
         gzip.write(bytes);
-        gzip.flush();
-        gzip.close();
 
       } catch (Exception e) {
         log.error(e.getMessage());
+      } finally {
+        if(gzip!=null && out!=null) {
+          gzip.flush();
+          gzip.close();
+          out.close();
+        }
       }
     }
     Type localVarReturnType = new TypeToken<String>() {}.getType();

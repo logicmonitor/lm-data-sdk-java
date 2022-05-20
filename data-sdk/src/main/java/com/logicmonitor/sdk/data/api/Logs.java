@@ -59,7 +59,8 @@ public class Logs extends BatchingCache {
    * @return
    * @throws ApiException
    */
-  protected static ApiResponse singleRequest(final LogsInput logsV1) throws ApiException {
+  protected static ApiResponse singleRequest(final LogsInput logsV1)
+      throws ApiException, IOException {
     JSON json = new JSON();
 
     final List<Map<String, Object>> logBody = new ArrayList<>();

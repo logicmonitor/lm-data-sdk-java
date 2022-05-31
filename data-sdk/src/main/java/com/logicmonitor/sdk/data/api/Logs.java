@@ -67,11 +67,11 @@ public class Logs extends BatchingCache {
     body.put("message", logsV1.getMessage());
     body.put("_lm.resourceId", logsV1.getResourceId());
     body.put("timestamp", logsV1.getTimeStamp());
-    if(logsV1.getMetadata()!=null) {
-      for (Map.Entry<String,String> entry : logsV1.getMetadata().entrySet()) {
-          body.put(entry.getKey(), entry.getValue());
+    if (logsV1.getMetadata() != null) {
+      for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
+        body.put(entry.getKey(), entry.getValue());
       }
-    }else{
+    } else {
       body.put("metadata", logsV1.getMetadata());
     }
     logBody.add(body);
@@ -136,11 +136,11 @@ public class Logs extends BatchingCache {
       body.put("message", logsV1.getMessage());
       body.put("_lm.resourceId", logsV1.getResourceId());
       body.put("timestamp", logsV1.getTimeStamp());
-      if(logsV1.getMetadata()!=null) {
-        for (Map.Entry<String,String> entry : logsV1.getMetadata().entrySet()) {
+      if (logsV1.getMetadata() != null) {
+        for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
           body.put(entry.getKey(), entry.getValue());
         }
-      }else{
+      } else {
         body.put("metadata", logsV1.getMetadata());
       }
       logBody.add(body);

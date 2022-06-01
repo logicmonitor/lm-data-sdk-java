@@ -100,4 +100,15 @@ public class TestLogs {
     Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, null)).thenReturn(null);
     Assert.assertTrue("This will succeed.", true);
   }
+
+  @Test
+  public void testSendLogsForBatchTrueWithMetadata() throws IOException, ApiException {
+    setUp();
+    HashMap<String, String> metadata = new HashMap<String, String>();
+    metadata.put("method", "sdk");
+    metadata.put("compression", "compressed");
+    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, metadata))
+        .thenReturn(null);
+    Assert.assertTrue("This will succeed.", true);
+  }
 }

@@ -61,16 +61,20 @@ public class Logs extends BatchingCache {
    */
   protected static ApiResponse singleRequest(final LogsInput logsV1)
       throws ApiException, IOException {
-    JSON json = new JSON();
 
     final List<Map<String, Object>> logBody = new ArrayList<>();
     final Map<String, Object> body = new HashMap<>();
     body.put("message", logsV1.getMessage());
     body.put("_lm.resourceId", logsV1.getResourceId());
     body.put("timestamp", logsV1.getTimeStamp());
-    body.put("metadata", json.serialize(logsV1.getMetadata()));
+    if (logsV1.getMetadata() != null) {
+      for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
+        body.put(entry.getKey(), entry.getValue());
+      }
+    } else {
+      body.put("metadata", logsV1.getMetadata());
+    }
     logBody.add(body);
-
     final BatchingCache b = new Logs();
     return b.makeRequest(logBody, PATH, METHOD, true, false, Configuration.getgZip());
   }
@@ -127,14 +131,18 @@ public class Logs extends BatchingCache {
   /** @return List<Map < String, Object>> */
   private List<Map<String, Object>> createBody() {
     final List<Map<String, Object>> logBody = new ArrayList<>();
-    JSON json = new JSON();
-
     for (final LogsInput logsV1 : logPayloadCache) {
       final Map<String, Object> body = new HashMap<>();
       body.put("message", logsV1.getMessage());
       body.put("_lm.resourceId", logsV1.getResourceId());
       body.put("timestamp", logsV1.getTimeStamp());
-      body.put("metadata", json.serialize(logsV1.getMetadata()));
+      if (logsV1.getMetadata() != null) {
+        for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
+          body.put(entry.getKey(), entry.getValue());
+        }
+      } else {
+        body.put("metadata", logsV1.getMetadata());
+      }
       logBody.add(body);
     }
     logPayloadCache.clear();

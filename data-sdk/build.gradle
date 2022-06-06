@@ -104,7 +104,7 @@ publishing {
     def pfx_file = System.getenv("FILE")
     def storetype =  System.getenv("STORETYPE")
 
-    def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -storepass " +
+    def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -tsa http://timestamp.comodoca.com/?td=sha256 -storepass " +
             passwd + " -keypass "+ passwd + " " + jar.archivePath + " " + app_alias
     exec_line.execute()
 

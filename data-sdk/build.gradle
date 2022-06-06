@@ -102,8 +102,9 @@ publishing {
     def passwd = System.getenv("PASSWORD")
     def app_alias = System.getenv("ALIAS")
     def pfx_file = System.getenv("FILE")
+    def storetype =  System.getenv("STORETYPE")
 
-    def exec_line = "jarsigner -keystore " + pfx_file + " -storepass " +
+    def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -storepass " +
             passwd + " -keypass "+ passwd + " " + jar.archivePath + " " + app_alias
     exec_line.execute()
 

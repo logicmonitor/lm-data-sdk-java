@@ -98,20 +98,30 @@ configurations {
     jar.archiveName ="lm-data-sdk-"+version+".jar"
 }
 
+task jarSigner {
+    doLast {
+        def passwd = System.getenv("PASSWORD")
+        def app_alias = System.getenv("ALIAS")
+        def pfx_file = System.getenv("FILE")
+        def storetype =  System.getenv("STORETYPE")
+
+        def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -tsa http://timestamp.comodoca.com/?td=sha256 -storepass " +
+                passwd + " -keypass "+ passwd + " " + jar.archivePath + " " + app_alias
+
+        def output=exec_line.execute()
+        output.waitFor()
+
+        println "Exit value: ${output.exitValue()}"
+        println "Output: ${output.text}"
+    }
+}
+jar.finalizedBy(jarSigner)
+
 publishing {
-    def passwd = System.getenv("PASSWORD")
-    def app_alias = System.getenv("ALIAS")
-    def pfx_file = System.getenv("FILE")
-    def storetype =  System.getenv("STORETYPE")
-
-    def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -tsa http://timestamp.comodoca.com/?td=sha256 -storepass " +
-            passwd + " -keypass "+ passwd + " " + jar.archivePath + " " + app_alias
-    exec_line.execute()
-
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             artifactId = 'lm-data-sdk'
-            from components.java
+            artifacts = [jar]
         }
     }
     repositories {

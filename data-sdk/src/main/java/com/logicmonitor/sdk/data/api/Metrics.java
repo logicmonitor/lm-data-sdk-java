@@ -9,15 +9,19 @@ package com.logicmonitor.sdk.data.api;
 
 import com.logicmonitor.sdk.data.ApiClientUserAgent;
 import com.logicmonitor.sdk.data.Configuration;
+import com.logicmonitor.sdk.data.Constant;
 import com.logicmonitor.sdk.data.internal.BatchingCache;
 import com.logicmonitor.sdk.data.model.*;
 import com.logicmonitor.sdk.data.validator.DataSourceInstanceValidator;
 import com.logicmonitor.sdk.data.validator.DataSourceValidator;
 import com.logicmonitor.sdk.data.validator.ResourceValidator;
 import com.logicmonitor.sdk.data.validator.Validator;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.zip.GZIPOutputStream;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.client.ApiCallback;
@@ -48,6 +52,8 @@ public class Metrics extends BatchingCache {
 
   private DataSourceInstanceValidator dataSourceInstanceValidator =
       new DataSourceInstanceValidator();
+
+  Constant constants = new Constant();
 
   public Metrics() {
     this(Configuration.getConfiguration());
@@ -206,38 +212,36 @@ public class Metrics extends BatchingCache {
           ds : item.getValue().entrySet()) {
         dataSource = ds.getKey();
 
-        if (ds.getValue().entrySet().size() <= 100) {
-          for (final Entry<DataSourceInstance, Map<DataPoint, Map<String, String>>> ins :
-              ds.getValue().entrySet()) {
-            final DataSourceInstance dataSourceInstance = ins.getKey();
+        for (final Entry<DataSourceInstance, Map<DataPoint, Map<String, String>>> ins :
+            ds.getValue().entrySet()) {
+          final DataSourceInstance dataSourceInstance = ins.getKey();
 
-            for (final Entry<DataPoint, Map<String, String>> dp : ins.getValue().entrySet()) {
-              final DataPoint dataPoint = dp.getKey();
-              final Map<String, String> valuePairs = new HashMap<>();
-              for (final Entry<String, String> value : dp.getValue().entrySet()) {
-                valuePairs.put(value.getKey(), value.getValue());
-              }
-
-              final RestDataPointV1 restDataPoint =
-                  new RestDataPointV1()
-                      .dataPointAggregationType(dataPoint.getAggregationType())
-                      .dataPointDescription(dataPoint.getDescription())
-                      .dataPointName(dataPoint.getName())
-                      .dataPointType(dataPoint.getType())
-                      .values(valuePairs)
-                      .percentileValue(dataPoint.getPercentileValue());
-              dataPoints.add(restDataPoint);
+          for (final Entry<DataPoint, Map<String, String>> dp : ins.getValue().entrySet()) {
+            final DataPoint dataPoint = dp.getKey();
+            final Map<String, String> valuePairs = new HashMap<>();
+            for (final Entry<String, String> value : dp.getValue().entrySet()) {
+              valuePairs.put(value.getKey(), value.getValue());
             }
 
-            final RestDataSourceInstanceV1 restInstance =
-                new RestDataSourceInstanceV1()
-                    .dataPoints(dataPoints)
-                    .instanceDescription(dataSourceInstance.getDescription())
-                    .instanceDisplayName(dataSourceInstance.getDisplayName())
-                    .instanceName(dataSourceInstance.getName())
-                    .instanceProperties(dataSourceInstance.getProperties());
-            instances.add(restInstance);
+            final RestDataPointV1 restDataPoint =
+                new RestDataPointV1()
+                    .dataPointAggregationType(dataPoint.getAggregationType())
+                    .dataPointDescription(dataPoint.getDescription())
+                    .dataPointName(dataPoint.getName())
+                    .dataPointType(dataPoint.getType())
+                    .values(valuePairs)
+                    .percentileValue(dataPoint.getPercentileValue());
+            dataPoints.add(restDataPoint);
           }
+
+          final RestDataSourceInstanceV1 restInstance =
+              new RestDataSourceInstanceV1()
+                  .dataPoints(dataPoints)
+                  .instanceDescription(dataSourceInstance.getDescription())
+                  .instanceDisplayName(dataSourceInstance.getDisplayName())
+                  .instanceName(dataSourceInstance.getName())
+                  .instanceProperties(dataSourceInstance.getProperties());
+          instances.add(restInstance);
         }
       }
 
@@ -290,31 +294,73 @@ public class Metrics extends BatchingCache {
   }
 
   /** return void. */
+  @SneakyThrows
   @Override
   protected void mergeRequest() {
-    final MetricsInput singleRequest = (MetricsInput) getRequest().remove();
-    if (!payloadCache.containsKey(singleRequest.getResource())) {
-      payloadCache.put(singleRequest.getResource(), new HashMap<>());
-    }
-    final Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>> dataSource =
-        payloadCache.get(singleRequest.getResource());
-    if (!dataSource.containsKey(singleRequest.getDataSource())) {
-      dataSource.put(singleRequest.getDataSource(), new HashMap<>());
-    }
-    final Map<DataSourceInstance, Map<DataPoint, Map<String, String>>> instance =
-        dataSource.get(singleRequest.getDataSource());
-    if (!instance.containsKey(singleRequest.getDataSourceInstance())) {
-      instance.put(singleRequest.getDataSourceInstance(), new HashMap<>());
-    }
-    final Map<DataPoint, Map<String, String>> dataPoint =
-        instance.get(singleRequest.getDataSourceInstance());
-    if (!dataPoint.containsKey(singleRequest.getDataPoint())) {
-      dataPoint.put(singleRequest.getDataPoint(), new HashMap<>());
-    }
-    final Map<String, String> value = dataPoint.get(singleRequest.getDataPoint());
+    MetricsInput singleRequest = (MetricsInput) getRequest().remove();
+    int singleRequestSize = singleRequest.toString().getBytes().length;
+    int payloadCacheSize = payloadCache.toString().getBytes().length;
+    int limit = singleRequestSize + payloadCacheSize;
+    int gzipLimit = 0;
+    if (Configuration.getgZip()) {
+      ByteArrayOutputStream out = null;
+      GZIPOutputStream gzip = null;
+      try {
 
-    for (final Entry<String, String> item : singleRequest.getValues().entrySet()) {
-      value.put(item.getKey(), item.getValue());
+        byte[] bytes = payloadCache.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] singleRequestBytes = singleRequest.toString().getBytes(StandardCharsets.UTF_8);
+        out = new ByteArrayOutputStream(bytes.length + singleRequestBytes.length);
+        gzip = new GZIPOutputStream(out);
+        gzip.write(bytes);
+        gzip.write(singleRequestBytes);
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      } finally {
+        if (gzip != null) {
+          gzip.flush();
+          gzip.close();
+        }
+        if (out != null) {
+          out.close();
+        }
+      }
+      gzipLimit = out.toString().getBytes().length;
+    }
+    if ((Configuration.getgZip()
+            && gzipLimit
+                <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE_ON_COMPRESSION)
+        || limit <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE) {
+      if (!payloadCache.containsKey(singleRequest.getResource())) {
+        payloadCache.put(singleRequest.getResource(), new HashMap<>());
+      }
+      final Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>>
+          dataSource = payloadCache.get(singleRequest.getResource());
+      if (!dataSource.containsKey(singleRequest.getDataSource())) {
+        dataSource.put(singleRequest.getDataSource(), new HashMap<>());
+      }
+      final Map<DataSourceInstance, Map<DataPoint, Map<String, String>>> instance =
+          dataSource.get(singleRequest.getDataSource());
+      if (instance.size() <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_INSTANCES_ALLOWED) {
+        if (!instance.containsKey(singleRequest.getDataSourceInstance())) {
+          instance.put(singleRequest.getDataSourceInstance(), new HashMap<>());
+        }
+      } else {
+        getRequest().add(singleRequest);
+        doRequest();
+      }
+      final Map<DataPoint, Map<String, String>> dataPoint =
+          instance.get(singleRequest.getDataSourceInstance());
+      if (!dataPoint.containsKey(singleRequest.getDataPoint())) {
+        dataPoint.put(singleRequest.getDataPoint(), new HashMap<>());
+      }
+      final Map<String, String> value = dataPoint.get(singleRequest.getDataPoint());
+
+      for (final Entry<String, String> item : singleRequest.getValues().entrySet()) {
+        value.put(item.getKey(), item.getValue());
+      }
+    } else {
+      getRequest().add(singleRequest);
+      doRequest();
     }
   }
 
@@ -408,7 +454,6 @@ public class Metrics extends BatchingCache {
   protected void doRequest() {
     createRestMetricsBody(payloadCache);
   }
-
   /** @param validator */
   public void setValidator(Validator validator) {
     this.validator = validator;

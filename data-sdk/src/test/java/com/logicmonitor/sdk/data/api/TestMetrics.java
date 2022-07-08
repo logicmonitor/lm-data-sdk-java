@@ -148,13 +148,17 @@ public class TestMetrics {
     Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>> dataSourceBody =
         new HashMap<>();
     Map<DataSourceInstance, Map<DataPoint, Map<String, String>>> instanceBody = new HashMap<>();
+    Map<DataPoint, Map<String, String>> dataPointMapMap = new HashMap<>();
+    Map<String, String> val = new HashMap<>();
     resource.setName(resourceName);
     resource.setCreate(true);
     dataSource.setName(dataSourceName);
     dataSourceInstance.setName(instanceName);
+    dataPoint.setName(cpuUsage);
     resourceBody.put(resource, dataSourceBody);
     dataSourceBody.put(dataSource, instanceBody);
-    instanceBody.put(dataSourceInstance, new HashMap<>());
+    instanceBody.put(dataSourceInstance, dataPointMapMap);
+    dataPointMapMap.put(dataPoint, values);
 
     HashMap<Resource, Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>>>
         payloadCache = new HashMap<>();

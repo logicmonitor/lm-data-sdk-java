@@ -53,8 +53,6 @@ public class Metrics extends BatchingCache {
   private DataSourceInstanceValidator dataSourceInstanceValidator =
       new DataSourceInstanceValidator();
 
-  Constant constants = new Constant();
-
   public Metrics() {
     this(Configuration.getConfiguration());
   }
@@ -328,8 +326,8 @@ public class Metrics extends BatchingCache {
     }
     if ((Configuration.getgZip()
             && gzipLimit
-                <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE_ON_COMPRESSION)
-        || limit <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE) {
+                <= Constant.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE_ON_COMPRESSION)
+        || limit <= Constant.DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE) {
       if (!payloadCache.containsKey(singleRequest.getResource())) {
         payloadCache.put(singleRequest.getResource(), new HashMap<>());
       }
@@ -340,7 +338,7 @@ public class Metrics extends BatchingCache {
       }
       final Map<DataSourceInstance, Map<DataPoint, Map<String, String>>> instance =
           dataSource.get(singleRequest.getDataSource());
-      if (instance.size() <= constants.DEFAULT_PUSHMETRICS_MAXIMUM_INSTANCES_ALLOWED) {
+      if (instance.size() <= Constant.DEFAULT_PUSHMETRICS_MAXIMUM_INSTANCES_ALLOWED) {
         if (!instance.containsKey(singleRequest.getDataSourceInstance())) {
           instance.put(singleRequest.getDataSourceInstance(), new HashMap<>());
         }

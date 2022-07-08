@@ -74,14 +74,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifactId = 'lm-data-sdk'
-        }
-    }
-}
-
 task codeCoverageReport(type: JacocoReport) {
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
@@ -104,6 +96,44 @@ test.finalizedBy codeCoverageReport
 
 configurations {
     jar.archiveName ="lm-data-sdk-"+version+".jar"
+}
+
+task jarSigner {
+    doLast {
+        def passwd = System.getenv("PASSWORD")
+        def app_alias = System.getenv("ALIAS")
+        def pfx_file = System.getenv("FILE")
+        def storetype =  System.getenv("STORETYPE")
+
+        def exec_line = "jarsigner -storetype " + storetype + " -keystore " + pfx_file + " -tsa http://timestamp.comodoca.com/?td=sha256 -storepass " +
+                passwd + " -keypass "+ passwd + " " + jar.archivePath + " " + app_alias
+
+        def output=exec_line.execute()
+        output.waitFor()
+
+        println "Exit value: ${output.exitValue()}"
+        println "Output: ${output.text}"
+    }
+}
+jar.finalizedBy(jarSigner)
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'lm-data-sdk'
+            artifacts = [jar]
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/logicmonitor/lm-data-sdk-java"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
 
 description = 'data-sdk'

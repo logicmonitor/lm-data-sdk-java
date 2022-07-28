@@ -49,9 +49,7 @@ public abstract class BatchingCache {
 
   static long startTime = System.currentTimeMillis();
 
-  static int metricsCounter = 0, resourceUpdateCounter = 0, logCounter = 0;
-
-  static Map<String, Integer> timeLimit = new HashMap<>();
+  static int metricsCounter = 0, logCounter = 0;
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
@@ -268,6 +266,11 @@ public abstract class BatchingCache {
       boolean timeRateLimit = checkTimeRateLimit(path);
       if (timeRateLimit) {
         syncReponse = apiClient.execute(call, localVarReturnType);
+      }else if(method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")){
+        syncReponse = apiClient.execute(call, localVarReturnType);
+      }
+      else{
+        log.error("The number of requests exceeds the rate limit");
       }
     } catch (ApiException e) {
       throw new ApiException(e.getCode() + " " + e.getMessage() + " " + e.getResponseBody());
@@ -302,28 +305,15 @@ public abstract class BatchingCache {
   public boolean checkTimeRateLimit(String path) {
     long endTime = System.currentTimeMillis();
     long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
-    long differenceInSecond = (((endTime - startTime) / 1000) % 60);
-    if (path.contains("metric/ingest")) {
-      timeLimit.put(path, metricsCounter++);
-    } else if (path.contains("resource_property/ingest")
-        || path.contains("instance_property/ingest")) {
-      timeLimit.put(path, resourceUpdateCounter++);
-    } else {
-      timeLimit.put(path, logCounter++);
-    }
     if (differenceInMinute < 1
-        && (path.contains("metric/ingest")
-            || path.contains("resource_property/ingest")
-            || path.contains("instance_property/ingest"))) {
-      if (metricsCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT
-          || resourceUpdateCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
-        if (metricsCounter >= Configuration.getLowerLimit()
-            || resourceUpdateCounter >= Configuration.getLowerLimit()) {
+        && path.contains("metric/ingest")) {
+      if (metricsCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
+        if (metricsCounter >= Configuration.getLowerLimit()) {
           return true;
         }
       }
     }
-    if (differenceInSecond < 1 && path.contains("log/ingest")) {
+    if (differenceInMinute < 1 && path.contains("log/ingest")) {
       if (logCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
         if (logCounter >= Configuration.getLowerLimit()) {
           return true;

@@ -92,7 +92,7 @@ public class TestBatchingCache {
   @Test
   public void testCheckTimeRateLimitFalseCondition() {
     Configuration.setLowerLimit(100);
-    boolean var = batchingCache.checkTimeRateLimit("resource_property/ingest");
+    boolean var = batchingCache.checkTimeRateLimit("metric/ingest");
     Assert.assertFalse(String.valueOf(var), Boolean.FALSE);
   }
 

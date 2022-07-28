@@ -10,6 +10,7 @@ package com.logicmonitor.sdk.data.internal;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.logicmonitor.sdk.data.Configuration;
+import com.logicmonitor.sdk.data.Constant;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,6 +46,12 @@ public abstract class BatchingCache {
   private Object queueLock = new Object();
   private Object cacheLock = new Object();
   private int interval = 0;
+
+  static long startTime = System.currentTimeMillis();
+
+  static int metricsCounter = 0, resourceUpdateCounter = 0, logCounter = 0;
+
+  static Map<String, Integer> timeLimit = new HashMap<>();
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
@@ -83,10 +90,11 @@ public abstract class BatchingCache {
   /** @param response */
   protected void responseHandler(ApiResponse response) {
     ApiException apiException = new ApiException();
-    log.debug(
-        "Response is {0}  {1}  \n{2}",
-        response, response.getStatusCode(), response.getHeaders().toString());
-
+    if (response != null) {
+      log.debug(
+          "Response is {0}  {1}  \n{2}",
+          response, response.getStatusCode(), response.getHeaders().toString());
+    }
     if (response != null) {
       if ((response.getStatusCode() == 200
               || response.getStatusCode() == 202
@@ -257,7 +265,10 @@ public abstract class BatchingCache {
 
     ApiResponse<String> syncReponse = null;
     try {
-      syncReponse = apiClient.execute(call, localVarReturnType);
+      boolean timeRateLimit = checkTimeRateLimit(path);
+      if (timeRateLimit) {
+        syncReponse = apiClient.execute(call, localVarReturnType);
+      }
     } catch (ApiException e) {
       throw new ApiException(e.getCode() + " " + e.getMessage() + " " + e.getResponseBody());
     }
@@ -280,5 +291,45 @@ public abstract class BatchingCache {
       requestThread.setDaemon(true);
       requestThread.start();
     }
+  }
+
+  /**
+   * This method is used to check time based rate Limit.
+   *
+   * @param path
+   * @return boolean
+   */
+  public boolean checkTimeRateLimit(String path) {
+    long endTime = System.currentTimeMillis();
+    long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
+    long differenceInSecond = (((endTime - startTime) / 1000) % 60);
+    if (path.contains("metric/ingest")) {
+      timeLimit.put(path, metricsCounter++);
+    } else if (path.contains("resource_property/ingest")
+        || path.contains("instance_property/ingest")) {
+      timeLimit.put(path, resourceUpdateCounter++);
+    } else {
+      timeLimit.put(path, logCounter++);
+    }
+    if (differenceInMinute < 1
+        && (path.contains("metric/ingest")
+            || path.contains("resource_property/ingest")
+            || path.contains("instance_property/ingest"))) {
+      if (metricsCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT
+          || resourceUpdateCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
+        if (metricsCounter >= Configuration.getLowerLimit()
+            || resourceUpdateCounter >= Configuration.getLowerLimit()) {
+          return true;
+        }
+      }
+    }
+    if (differenceInSecond < 1 && path.contains("log/ingest")) {
+      if (logCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
+        if (logCounter >= Configuration.getLowerLimit()) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

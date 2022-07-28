@@ -39,6 +39,8 @@ public class Configuration {
 
   private static boolean gZip = true;
 
+  private static int lowerLimit = 0;
+
   /**
    * LM_COMPANY company name LM_ACCESS_ID Access Id for LMv1 LM_ACCESS_KEY Access key for LMv1
    * LM_BEARER_TOKEN BEARER_TOKEN
@@ -223,5 +225,15 @@ public class Configuration {
   /** @param gZip */
   public static void setgZip(boolean gZip) {
     Configuration.gZip = gZip;
+  }
+
+  /** @return lowerLimit */
+  public static int getLowerLimit() {
+    return lowerLimit;
+  }
+
+  /** @param lowerLimit */
+  public static void setLowerLimit(int lowerLimit) {
+    Configuration.lowerLimit = lowerLimit;
   }
 }

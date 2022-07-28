@@ -266,10 +266,9 @@ public abstract class BatchingCache {
       boolean timeRateLimit = checkTimeRateLimit(path);
       if (timeRateLimit) {
         syncReponse = apiClient.execute(call, localVarReturnType);
-      }else if(method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")){
+      } else if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
         syncReponse = apiClient.execute(call, localVarReturnType);
-      }
-      else{
+      } else {
         log.error("The number of requests exceeds the rate limit");
       }
     } catch (ApiException e) {
@@ -305,8 +304,7 @@ public abstract class BatchingCache {
   public boolean checkTimeRateLimit(String path) {
     long endTime = System.currentTimeMillis();
     long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
-    if (differenceInMinute < 1
-        && path.contains("metric/ingest")) {
+    if (differenceInMinute < 1 && path.contains("metric/ingest")) {
       if (metricsCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
         if (metricsCounter >= Configuration.getLowerLimit()) {
           return true;

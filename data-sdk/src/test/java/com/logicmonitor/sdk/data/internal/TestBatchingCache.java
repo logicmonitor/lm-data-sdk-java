@@ -82,4 +82,58 @@ public class TestBatchingCache {
     batchingCache.responseHandler(response);
     Assert.assertFalse("This will fail.", false);
   }
+
+  @Test
+  public void testCheckTimeRateLimit() {
+    boolean var = batchingCache.checkTimeRateLimit("metric/ingest");
+    Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
+  }
+
+  @Test
+  public void testCheckTimeRateLimitFalseCondition() {
+    Configuration.setLowerLimit(100);
+    boolean var = batchingCache.checkTimeRateLimit("metric/ingest");
+    Assert.assertFalse(String.valueOf(var), Boolean.FALSE);
+  }
+
+  @Test
+  public void testCheckTimeRateLimitForLogs() {
+    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+    Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
+  }
+
+  @Test
+  public void testCheckTimeRateLimitForLogsFalseCondition() {
+    Configuration.setLowerLimit(100);
+    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+    Assert.assertFalse(String.valueOf(var), Boolean.FALSE);
+  }
+
+  @Test
+  public void testMakeRequestForResourceUpdate() throws IOException {
+    List<String> list = new ArrayList<>();
+    ApiResponse<String> expected = null;
+    try {
+      list.add("body");
+      expected =
+          batchingCache.makeRequest(
+              list, "/rest/resource_property/ingest", "PUT", true, false, Configuration.getgZip());
+    } catch (ApiException e) {
+      Assertions.assertThrows(NullPointerException.class, (Executable) expected);
+    }
+  }
+
+  @Test
+  public void testMakeRequestForFailure() throws IOException {
+    List<String> list = new ArrayList<>();
+    ApiResponse<String> expected = null;
+    try {
+      list.add("body");
+      expected =
+          batchingCache.makeRequest(
+              list, "/rest/resource_property/ingest", "POST", true, false, Configuration.getgZip());
+    } catch (ApiException e) {
+      Assertions.assertThrows(NullPointerException.class, (Executable) expected);
+    }
+  }
 }

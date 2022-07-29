@@ -47,12 +47,6 @@ public class TestLogs {
     logs.setRawRequest(rawRequest);
   }
 
-  @Test(expected = Exception.class)
-  public void testDoRequest() {
-    setPayload();
-    logs.doRequest();
-  }
-
   @Test
   public void testSendLogs() throws IOException, ApiException {
     setUp();
@@ -79,6 +73,12 @@ public class TestLogs {
   }
 
   @Test(expected = Exception.class)
+  public void testDoRequest() {
+    setPayload();
+    logs.doRequest();
+  }
+
+  @Test(expected = Exception.class)
   public void testSingleRequest() throws ApiException, IOException {
     HashMap<String, String> metadata = new HashMap<String, String>();
     metadata.put("method", "sdk");
@@ -88,7 +88,7 @@ public class TestLogs {
     Logs.singleRequest(input);
   }
 
-  @Test(expected = Exception.class)
+  @Test(expected = ApiException.class)
   public void testSingleRequestNullMetadata() throws ApiException, IOException {
     LogsInput input = new LogsInput("Testing log Api second call", resourceIds, "1789765436", null);
     Logs.singleRequest(input);

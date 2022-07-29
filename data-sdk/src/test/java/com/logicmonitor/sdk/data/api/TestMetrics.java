@@ -187,7 +187,7 @@ public class TestMetrics {
     metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint, values);
   }
 
-  @Test
+  @Test(expected = Exception.class)
   public void testCreateTrue() throws IOException {
 
     List<RestMetricsV1> expected = new ArrayList<>();
@@ -219,7 +219,6 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
-    Assert.assertEquals(payloadCache.get("resource"), resourceBody.get("resource"));
   }
 
   @Test(expected = Exception.class)

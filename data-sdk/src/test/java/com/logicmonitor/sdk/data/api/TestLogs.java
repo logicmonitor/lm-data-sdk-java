@@ -17,11 +17,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
+import org.openapitools.client.ApiResponse;
 
 public class TestLogs {
 
@@ -73,14 +74,7 @@ public class TestLogs {
     Assert.assertTrue("This will succeed.", true);
   }
 
-  @Test(expected = Exception.class)
-  public void testDoRequest() {
-    setPayload();
-    logs.doRequest();
-    Assume.assumeTrue(false);
-  }
-
-  @Test(expected = ApiException.class)
+  @Test
   public void testSingleRequest() throws ApiException, IOException {
     HashMap<String, String> metadata = new HashMap<String, String>();
     metadata.put("method", "sdk");
@@ -88,14 +82,14 @@ public class TestLogs {
     LogsInput input =
         new LogsInput("Testing log Api second call", resourceIds, "1789765436", metadata);
     Logs.singleRequest(input);
-    Assume.assumeTrue(false);
+    Assertions.assertEquals("1789765436", input.getTimeStamp());
   }
 
-  @Test(expected = ApiException.class)
+  @Test(expected = Exception.class)
   public void testSingleRequestNullMetadata() throws ApiException, IOException {
     LogsInput input = new LogsInput("Testing log Api second call", resourceIds, "1789765436", null);
-    Logs.singleRequest(input);
-    Assume.assumeTrue(false);
+    ApiResponse response = Logs.singleRequest(input);
+    Assertions.assertEquals(response.getHeaders(), input.getMessage());
   }
 
   @Test

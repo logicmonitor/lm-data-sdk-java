@@ -19,14 +19,8 @@ import com.logicmonitor.sdk.data.validator.DataSourceValidator;
 import com.logicmonitor.sdk.data.validator.ResourceValidator;
 import com.logicmonitor.sdk.data.validator.Validator;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
@@ -128,7 +122,7 @@ public class TestMetrics {
     Mockito.when(conf.setCompany()).thenReturn("https://company01.test.com/rest");
   }
 
-  @Test(expected = Exception.class)
+  @Test
   public void testCreateRestMetricsBody() throws IOException {
 
     List<RestMetricsV1> expected = new ArrayList<>();
@@ -165,7 +159,7 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
-    Assume.assumeTrue(false);
+    Assertions.assertEquals(payloadCache.get("resource"), resourceBody.get("resource"));
   }
 
   @Test(expected = Exception.class)
@@ -173,7 +167,7 @@ public class TestMetrics {
     metrics.doRequest();
   }
 
-  @Test(expected = ApiException.class)
+  @Test
   public void testSingleRequest() throws ApiException, IOException {
     final MetricsInput input = new MetricsInput();
     input.setResource(resource);
@@ -181,10 +175,10 @@ public class TestMetrics {
     input.setDataSourceInstance(dataSourceInstance);
     input.setDataPoint(dataPoint);
     metrics.singleRequest(input);
-    Assume.assumeTrue(false);
+    Assertions.assertEquals(resource, input.getResource());
   }
 
-  @Test(expected = Exception.class)
+  @Test
   public void testInvalidSendMetrics() throws Exception {
     setUpforBatchFalse();
     List<RestMetricsV1> response = new ArrayList<>();
@@ -193,10 +187,10 @@ public class TestMetrics {
     dataSourceInstance.setName(instanceName);
     dataPoint.setName(cpuUsage);
     metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint, values);
-    Assume.assumeTrue(false);
+    Assertions.assertEquals("Java_Data_SDK_Test", resource.getName());
   }
 
-  @Test(expected = Exception.class)
+  @Test
   public void testCreateTrue() throws IOException {
 
     List<RestMetricsV1> expected = new ArrayList<>();
@@ -228,7 +222,7 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
-    Assume.assumeTrue(false);
+    Assert.assertEquals(payloadCache.get("resource"), resourceBody.get("resource"));
   }
 
   @Test(expected = Exception.class)

@@ -78,7 +78,7 @@ public class TestLogs {
     logs.doRequest();
   }
 
-  @Test(expected = Exception.class)
+  @Test(expected = ApiException.class)
   public void testSingleRequest() throws ApiException, IOException {
     HashMap<String, String> metadata = new HashMap<String, String>();
     metadata.put("method", "sdk");

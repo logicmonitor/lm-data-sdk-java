@@ -122,7 +122,7 @@ public class TestMetrics {
     Mockito.when(conf.setCompany()).thenReturn("https://company01.test.com/rest");
   }
 
-  @Test
+  @Test(expected = Exception.class)
   public void testCreateRestMetricsBody() throws IOException {
 
     List<RestMetricsV1> expected = new ArrayList<>();
@@ -159,7 +159,6 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
-    Assertions.assertEquals(payloadCache.get("resource"), resourceBody.get("resource"));
   }
 
   @Test(expected = Exception.class)
@@ -167,7 +166,7 @@ public class TestMetrics {
     metrics.doRequest();
   }
 
-  @Test
+  @Test(expected = ApiException.class)
   public void testSingleRequest() throws ApiException, IOException {
     final MetricsInput input = new MetricsInput();
     input.setResource(resource);
@@ -175,10 +174,9 @@ public class TestMetrics {
     input.setDataSourceInstance(dataSourceInstance);
     input.setDataPoint(dataPoint);
     metrics.singleRequest(input);
-    Assertions.assertEquals(resource, input.getResource());
   }
 
-  @Test
+  @Test(expected = Exception.class)
   public void testInvalidSendMetrics() throws Exception {
     setUpforBatchFalse();
     List<RestMetricsV1> response = new ArrayList<>();
@@ -187,7 +185,6 @@ public class TestMetrics {
     dataSourceInstance.setName(instanceName);
     dataPoint.setName(cpuUsage);
     metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint, values);
-    Assertions.assertEquals("Java_Data_SDK_Test", resource.getName());
   }
 
   @Test

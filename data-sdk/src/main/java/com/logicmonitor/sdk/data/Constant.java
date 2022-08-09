@@ -11,6 +11,4 @@ public class Constant {
   // public static final long DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE=32768;
 
   public static final long DEFAULT_PUSHMETRICS_MAXIMUM_METRICS_PAYLOAD_SIZE_ON_COMPRESSION = 104858;
-
-  public static final long REQUEST_PER_MINUTE_UPPER_LIMIT = 100;
 }

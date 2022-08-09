@@ -39,7 +39,7 @@ public class Configuration {
 
   private static boolean gZip = true;
 
-  private static int lowerLimit = 0;
+  private static int requestPerMinute = 100;
 
   /**
    * LM_COMPANY company name LM_ACCESS_ID Access Id for LMv1 LM_ACCESS_KEY Access key for LMv1
@@ -227,13 +227,13 @@ public class Configuration {
     Configuration.gZip = gZip;
   }
 
-  /** @return lowerLimit */
-  public static int getLowerLimit() {
-    return lowerLimit;
+  /** @return requestPerMinute */
+  public static int getRequestPerMinute() {
+    return requestPerMinute;
   }
 
-  /** @param lowerLimit */
-  public static void setLowerLimit(int lowerLimit) {
-    Configuration.lowerLimit = lowerLimit;
+  /** @param requestPerMinute */
+  public static void setRequestPerMinute(int requestPerMinute) {
+    Configuration.requestPerMinute = requestPerMinute;
   }
 }

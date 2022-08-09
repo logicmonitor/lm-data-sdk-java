@@ -10,7 +10,6 @@ package com.logicmonitor.sdk.data.internal;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.logicmonitor.sdk.data.Configuration;
-import com.logicmonitor.sdk.data.Constant;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public abstract class BatchingCache {
 
   static long startTime = System.currentTimeMillis();
 
-  static int metricsCounter = 0, logCounter = 0;
+  static int metricsCounter = 1, logCounter = 1;
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
@@ -304,19 +303,17 @@ public abstract class BatchingCache {
   public boolean checkTimeRateLimit(String path) {
     long endTime = System.currentTimeMillis();
     long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
-    if (differenceInMinute < 1 && path.contains("metric/ingest")) {
-      if (metricsCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
-        if (metricsCounter >= Configuration.getLowerLimit()) {
-          return true;
-        }
-      }
+    if (differenceInMinute < 1
+        && path.contains("metric/ingest")
+        && metricsCounter <= Configuration.getRequestPerMinute()) {
+      metricsCounter++;
+      return true;
     }
-    if (differenceInMinute < 1 && path.contains("log/ingest")) {
-      if (logCounter <= Constant.REQUEST_PER_MINUTE_UPPER_LIMIT) {
-        if (logCounter >= Configuration.getLowerLimit()) {
-          return true;
-        }
-      }
+    if (differenceInMinute < 1
+        && path.contains("log/ingest")
+        && logCounter <= Configuration.getRequestPerMinute()) {
+      logCounter++;
+      return true;
     }
     return false;
   }

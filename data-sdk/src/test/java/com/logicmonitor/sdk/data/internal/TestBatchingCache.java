@@ -123,7 +123,7 @@ public class TestBatchingCache {
     }
   }
 
-  @Test
+  @Test(expected = Exception.class)
   public void testMakeRequestForFailure() throws IOException {
     List<String> list = new ArrayList<>();
     ApiResponse<String> expected = null;
@@ -133,7 +133,7 @@ public class TestBatchingCache {
           batchingCache.makeRequest(
               list, "/rest/resource_property/ingest", "POST", true, false, Configuration.getgZip());
     } catch (ApiException e) {
-      Assertions.assertThrows(NullPointerException.class, (Executable) expected);
+      Assertions.assertThrows(Exception.class, (Executable) expected);
     }
   }
 }

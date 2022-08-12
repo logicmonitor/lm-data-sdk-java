@@ -46,9 +46,9 @@ public abstract class BatchingCache {
   private Object cacheLock = new Object();
   private int interval = 0;
 
-  static long startTime = System.currentTimeMillis();
+  private static long startTime = System.currentTimeMillis();
 
-  static int metricsCounter = 1, logCounter = 1;
+  private static int metricsCounter = 1, logCounter = 1;
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
@@ -165,6 +165,7 @@ public abstract class BatchingCache {
    * @return
    * @throws ApiException
    */
+  @SneakyThrows
   public ApiResponse<String> makeRequest(
       final List body,
       final String path,
@@ -268,7 +269,7 @@ public abstract class BatchingCache {
       } else if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
         syncReponse = apiClient.execute(call, localVarReturnType);
       } else {
-        log.error("The number of requests exceeds the rate limit");
+        throw new Exception("The number of requests exceeds the rate limit") ;
       }
     } catch (ApiException e) {
       throw new ApiException(e.getCode() + " " + e.getMessage() + " " + e.getResponseBody());

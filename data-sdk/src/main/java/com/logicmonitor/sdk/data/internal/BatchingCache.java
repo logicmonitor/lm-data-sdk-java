@@ -269,7 +269,7 @@ public abstract class BatchingCache {
       } else if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
         syncReponse = apiClient.execute(call, localVarReturnType);
       } else {
-        throw new Exception("The number of requests exceeds the rate limit") ;
+        throw new Exception("The number of requests exceeds the rate limit");
       }
     } catch (ApiException e) {
       throw new ApiException(e.getCode() + " " + e.getMessage() + " " + e.getResponseBody());

@@ -136,4 +136,18 @@ public class TestBatchingCache {
       Assertions.assertThrows(Exception.class, (Executable) expected);
     }
   }
+
+  @Test
+  public void testMakeRequestForLogs() throws IOException {
+    List<String> list = new ArrayList<>();
+    ApiResponse<String> expected = null;
+    try {
+      list.add("body");
+      expected =
+          batchingCache.makeRequest(
+              list, "log/ingest", "POST", true, false, Configuration.getgZip());
+    } catch (ApiException e) {
+      Assertions.assertThrows(Exception.class, (Executable) expected);
+    }
+  }
 }

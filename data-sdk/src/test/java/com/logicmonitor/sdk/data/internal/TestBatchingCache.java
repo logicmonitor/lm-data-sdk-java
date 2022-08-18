@@ -149,4 +149,11 @@ public class TestBatchingCache {
       Assertions.assertThrows(Exception.class, (Executable) expected);
     }
   }
+
+  @Test
+  public void testCheckNumberOfRequestForMinute() {
+    BatchingCache.setStartTime(System.currentTimeMillis() - 1800000);
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
+    Assert.assertEquals(var, Boolean.TRUE);
+  }
 }

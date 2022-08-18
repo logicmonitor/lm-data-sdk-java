@@ -324,4 +324,14 @@ public abstract class BatchingCache {
     }
     return false;
   }
+
+  /**
+   * This method is used to set start time.
+   *
+   * @param startTime
+   * @return startTime
+   */
+  public static void setStartTime(long startTime) {
+    BatchingCache.startTime = startTime;
+  }
 }

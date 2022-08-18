@@ -84,28 +84,27 @@ public class TestBatchingCache {
   }
 
   @Test
-  public void testCheckTimeRateLimit() {
-    boolean var = batchingCache.checkTimeRateLimit("metric/ingest");
+  public void testCheckNumberOfRequest() {
+    boolean var = batchingCache.checkNumberOfRequest("metric/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 
   @Test
-  public void testCheckTimeRateLimitFalseCondition() {
-    Configuration.setRequestPerMinute(100);
-    boolean var = batchingCache.checkTimeRateLimit("/resource_property/ingest");
+  public void testCheckNumberOfRequestFalseCondition() {
+    boolean var = batchingCache.checkNumberOfRequest("/resource_property/ingest");
     Assert.assertFalse(String.valueOf(var), Boolean.FALSE);
   }
 
   @Test
-  public void testCheckTimeRateLimitForLogs() {
-    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+  public void testCheckNumberOfRequestForLogs() {
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 
   @Test
-  public void testCheckTimeRateLimitForLogsFalseCondition() {
+  public void testCheckNumberOfRequestForLogsFalseCondition() {
     Configuration.setRequestPerMinute(100);
-    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 

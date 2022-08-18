@@ -263,7 +263,7 @@ public abstract class BatchingCache {
 
     ApiResponse<String> syncReponse = null;
     try {
-      boolean timeRateLimit = checkTimeRateLimit(path);
+      boolean timeRateLimit = checkNumberOfRequest(path);
       if (timeRateLimit) {
         syncReponse = apiClient.execute(call, localVarReturnType);
       } else if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
@@ -301,7 +301,7 @@ public abstract class BatchingCache {
    * @param path
    * @return boolean
    */
-  public boolean checkTimeRateLimit(String path) {
+  public boolean checkNumberOfRequest(String path) {
     long endTime = System.currentTimeMillis();
     long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
     if (differenceInMinute < 1
@@ -314,6 +314,12 @@ public abstract class BatchingCache {
         && path.contains("log/ingest")
         && logCounter <= Configuration.getRequestPerMinute()) {
       logCounter++;
+      return true;
+    }
+    if (differenceInMinute >= 1) {
+      startTime = System.currentTimeMillis();
+      metricsCounter = 1;
+      logCounter = 1;
       return true;
     }
     return false;

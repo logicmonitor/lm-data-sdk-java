@@ -84,28 +84,27 @@ public class TestBatchingCache {
   }
 
   @Test
-  public void testCheckTimeRateLimit() {
-    boolean var = batchingCache.checkTimeRateLimit("metric/ingest");
+  public void testCheckNumberOfRequest() {
+    boolean var = batchingCache.checkNumberOfRequest("metric/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 
   @Test
-  public void testCheckTimeRateLimitFalseCondition() {
-    Configuration.setRequestPerMinute(100);
-    boolean var = batchingCache.checkTimeRateLimit("/resource_property/ingest");
+  public void testCheckNumberOfRequestFalseCondition() {
+    boolean var = batchingCache.checkNumberOfRequest("/resource_property/ingest");
     Assert.assertFalse(String.valueOf(var), Boolean.FALSE);
   }
 
   @Test
-  public void testCheckTimeRateLimitForLogs() {
-    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+  public void testCheckNumberOfRequestForLogs() {
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 
   @Test
-  public void testCheckTimeRateLimitForLogsFalseCondition() {
+  public void testCheckNumberOfRequestForLogsFalseCondition() {
     Configuration.setRequestPerMinute(100);
-    boolean var = batchingCache.checkTimeRateLimit("log/ingest");
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
     Assert.assertTrue(String.valueOf(var), Boolean.TRUE);
   }
 
@@ -123,7 +122,7 @@ public class TestBatchingCache {
     }
   }
 
-  @Test
+  @Test(expected = Exception.class)
   public void testMakeRequestForFailure() throws IOException {
     List<String> list = new ArrayList<>();
     ApiResponse<String> expected = null;
@@ -133,7 +132,28 @@ public class TestBatchingCache {
           batchingCache.makeRequest(
               list, "/rest/resource_property/ingest", "POST", true, false, Configuration.getgZip());
     } catch (ApiException e) {
-      Assertions.assertThrows(NullPointerException.class, (Executable) expected);
+      Assertions.assertThrows(Exception.class, (Executable) expected);
     }
+  }
+
+  @Test
+  public void testMakeRequestForLogs() throws IOException {
+    List<String> list = new ArrayList<>();
+    ApiResponse<String> expected = null;
+    try {
+      list.add("body");
+      expected =
+          batchingCache.makeRequest(
+              list, "log/ingest", "POST", true, false, Configuration.getgZip());
+    } catch (ApiException e) {
+      Assertions.assertThrows(Exception.class, (Executable) expected);
+    }
+  }
+
+  @Test
+  public void testCheckNumberOfRequestForMinute() {
+    BatchingCache.setStartTime(System.currentTimeMillis() - 1800000);
+    boolean var = batchingCache.checkNumberOfRequest("log/ingest");
+    Assert.assertEquals(var, Boolean.TRUE);
   }
 }

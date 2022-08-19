@@ -46,9 +46,9 @@ public abstract class BatchingCache {
   private Object cacheLock = new Object();
   private int interval = 0;
 
-  static long startTime = System.currentTimeMillis();
+  private static long startTime = System.currentTimeMillis();
 
-  static int metricsCounter = 1, logCounter = 1;
+  private static int metricsCounter = 1, logCounter = 1;
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
@@ -165,6 +165,7 @@ public abstract class BatchingCache {
    * @return
    * @throws ApiException
    */
+  @SneakyThrows
   public ApiResponse<String> makeRequest(
       final List body,
       final String path,
@@ -262,13 +263,13 @@ public abstract class BatchingCache {
 
     ApiResponse<String> syncReponse = null;
     try {
-      boolean timeRateLimit = checkTimeRateLimit(path);
+      boolean timeRateLimit = checkNumberOfRequest(path);
       if (timeRateLimit) {
         syncReponse = apiClient.execute(call, localVarReturnType);
       } else if (method.equalsIgnoreCase("PUT") || method.equalsIgnoreCase("PATCH")) {
         syncReponse = apiClient.execute(call, localVarReturnType);
       } else {
-        log.error("The number of requests exceeds the rate limit");
+        throw new Exception("The number of requests exceeds the rate limit");
       }
     } catch (ApiException e) {
       throw new ApiException(e.getCode() + " " + e.getMessage() + " " + e.getResponseBody());
@@ -300,7 +301,7 @@ public abstract class BatchingCache {
    * @param path
    * @return boolean
    */
-  public boolean checkTimeRateLimit(String path) {
+  public boolean checkNumberOfRequest(String path) {
     long endTime = System.currentTimeMillis();
     long differenceInMinute = (((endTime - startTime) / (1000 * 60)) % 60);
     if (differenceInMinute < 1
@@ -315,6 +316,22 @@ public abstract class BatchingCache {
       logCounter++;
       return true;
     }
+    if (differenceInMinute >= 1) {
+      startTime = System.currentTimeMillis();
+      metricsCounter = 1;
+      logCounter = 1;
+      return true;
+    }
     return false;
+  }
+
+  /**
+   * This method is used to set start time.
+   *
+   * @param startTime
+   * @return startTime
+   */
+  public static void setStartTime(long startTime) {
+    BatchingCache.startTime = startTime;
   }
 }

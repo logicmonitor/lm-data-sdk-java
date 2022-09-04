@@ -80,8 +80,8 @@ public class Logs extends BatchingCache {
       body.put("metadata", logsV1.getMetadata());
     }
     logBody.add(body);
-    double msg_size= Double.parseDouble(df.format(logsV1.getMessage().getBytes().length/1024.0));
-    if(msg_size>Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE){
+    double msg_size = Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
+    if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
       log.info("Your message exceeds 32KB It will be truncate");
     }
     final BatchingCache b = new Logs();
@@ -94,15 +94,14 @@ public class Logs extends BatchingCache {
     final LogsInput singleRequest = (LogsInput) getRequest().remove();
     int singleRequestSize = singleRequest.toString().getBytes().length;
     int payloadCacheSize = payloadCache.toString().getBytes().length;
-    double limit = (singleRequestSize + payloadCacheSize)/(1024.0*1024.0);
-    if(limit<= Constant.DEFAULT_PUSHMETRICS_LOG_MAXIMUM_CONTENT_SIZE_PER_PAYLOAD) {
+    double limit = (singleRequestSize + payloadCacheSize) / (1024.0 * 1024.0);
+    if (limit <= Constant.DEFAULT_PUSHMETRICS_LOG_MAXIMUM_CONTENT_SIZE_PER_PAYLOAD) {
       logPayloadCache.add(singleRequest);
-    }else{
+    } else {
       getRequest().add(singleRequest);
       doRequest();
     }
   }
-
 
   /** Return void */
   @SneakyThrows
@@ -163,8 +162,9 @@ public class Logs extends BatchingCache {
         body.put("metadata", logsV1.getMetadata());
       }
       logBody.add(body);
-      double msg_size= Double.parseDouble(df.format(logsV1.getMessage().getBytes().length/1024.0));
-      if(msg_size>Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE){
+      double msg_size =
+          Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
+      if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
         log.info("Your message exceeds 32KB It will be truncate");
       }
     }

@@ -94,7 +94,7 @@ public class Logs extends BatchingCache {
     final LogsInput singleRequest = (LogsInput) getRequest().remove();
     int singleRequestSize = singleRequest.toString().getBytes().length;
     int payloadCacheSize = payloadCache.toString().getBytes().length;
-    double limit = (singleRequestSize + payloadCacheSize) / (1024.0 * 1024.0);
+    double limit = singleRequestSize + payloadCacheSize;
     if (limit <= Constant.DEFAULT_PUSHMETRICS_LOG_MAXIMUM_CONTENT_SIZE_PER_PAYLOAD) {
       logPayloadCache.add(singleRequest);
     } else {

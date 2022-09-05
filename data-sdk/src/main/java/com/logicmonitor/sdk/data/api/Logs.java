@@ -82,7 +82,7 @@ public class Logs extends BatchingCache {
     logBody.add(body);
     double msg_size = Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
     if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
-      log.info("Your message exceeds 32KB It will be truncate");
+      log.warn("Your message exceeds 32KB It will be truncate");
     }
     final BatchingCache b = new Logs();
     return b.makeRequest(logBody, PATH, METHOD, true, false, Configuration.getgZip());
@@ -165,7 +165,7 @@ public class Logs extends BatchingCache {
       double msg_size =
           Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
       if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
-        log.info("Your message exceeds 32KB It will be truncate");
+        log.warn("Your message exceeds 32KB It will be truncate");
       }
     }
     logPayloadCache.clear();

@@ -8,14 +8,9 @@
 package com.logicmonitor.sdk.data.api;
 
 import com.logicmonitor.sdk.data.Configuration;
-import com.logicmonitor.sdk.data.model.Input;
-import com.logicmonitor.sdk.data.model.LogsInput;
+import com.logicmonitor.sdk.data.model.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -61,8 +56,15 @@ public class TestLogs {
     logs.setLogPayloadCache(logPayloadCache);
   }
 
+  public void setPayloadCache() {
+    HashMap<Resource, Map<DataSource, Map<DataSourceInstance, Map<DataPoint, Map<String, String>>>>>
+        payloadCache = new HashMap<>();
+    logs.setPayloadCache(payloadCache);
+  }
+
   @Test
   public void testMergeRequest() {
+    setPayloadCache();
     setPayload();
     LogsInput input = new LogsInput("Testing log Api second call", resourceIds, "1789765436", null);
     Queue<Input> rawRequest = new LinkedList<>();

@@ -9,15 +9,19 @@ package com.logicmonitor.sdk.data.api;
 
 import com.logicmonitor.sdk.data.ApiClientUserAgent;
 import com.logicmonitor.sdk.data.Configuration;
+import com.logicmonitor.sdk.data.Constant;
 import com.logicmonitor.sdk.data.internal.BatchingCache;
 import com.logicmonitor.sdk.data.model.LogsInput;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.*;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.client.*;
 
 /** This Class is used to Send Logs.This class is used by user to interact with LogicMonitor. */
+@Slf4j
 public class Logs extends BatchingCache {
 
   private static final String PATH = "/log/ingest";
@@ -62,6 +66,7 @@ public class Logs extends BatchingCache {
   protected static ApiResponse singleRequest(final LogsInput logsV1)
       throws ApiException, IOException {
 
+    final DecimalFormat df = new DecimalFormat("0.00");
     final List<Map<String, Object>> logBody = new ArrayList<>();
     final Map<String, Object> body = new HashMap<>();
     body.put("message", logsV1.getMessage());
@@ -75,6 +80,10 @@ public class Logs extends BatchingCache {
       body.put("metadata", logsV1.getMetadata());
     }
     logBody.add(body);
+    double msg_size = Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
+    if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
+      log.warn("Your message exceeds 32KB It will be truncate");
+    }
     final BatchingCache b = new Logs();
     return b.makeRequest(logBody, PATH, METHOD, true, false, Configuration.getgZip());
   }
@@ -83,7 +92,15 @@ public class Logs extends BatchingCache {
   @Override
   protected void mergeRequest() {
     final LogsInput singleRequest = (LogsInput) getRequest().remove();
-    logPayloadCache.add(singleRequest);
+    int singleRequestSize = singleRequest.toString().getBytes().length;
+    int payloadCacheSize = payloadCache.toString().getBytes().length;
+    double limit = singleRequestSize + payloadCacheSize;
+    if (limit <= Constant.DEFAULT_PUSHMETRICS_LOG_MAXIMUM_CONTENT_SIZE_PER_PAYLOAD) {
+      logPayloadCache.add(singleRequest);
+    } else {
+      getRequest().add(singleRequest);
+      doRequest();
+    }
   }
 
   /** Return void */
@@ -130,6 +147,7 @@ public class Logs extends BatchingCache {
 
   /** @return List<Map < String, Object>> */
   private List<Map<String, Object>> createBody() {
+    final DecimalFormat df = new DecimalFormat("0.00");
     final List<Map<String, Object>> logBody = new ArrayList<>();
     for (final LogsInput logsV1 : logPayloadCache) {
       final Map<String, Object> body = new HashMap<>();
@@ -144,6 +162,11 @@ public class Logs extends BatchingCache {
         body.put("metadata", logsV1.getMetadata());
       }
       logBody.add(body);
+      double msg_size =
+          Double.parseDouble(df.format(logsV1.getMessage().getBytes().length / 1024.0));
+      if (msg_size > Constant.DEFAULT_PUSHMETRICS_MAXIMUM_ARRAY_SIZE_FOR_SINGLE_LOG_MESSAGE) {
+        log.warn("Your message exceeds 32KB It will be truncate");
+      }
     }
     logPayloadCache.clear();
     return logBody;

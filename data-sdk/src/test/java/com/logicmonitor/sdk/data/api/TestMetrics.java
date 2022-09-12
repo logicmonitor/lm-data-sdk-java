@@ -8,6 +8,7 @@
 package com.logicmonitor.sdk.data.api;
 
 import com.logicmonitor.sdk.data.Configuration;
+import com.logicmonitor.sdk.data.internal.BatchingCache;
 import com.logicmonitor.sdk.data.model.DataPoint;
 import com.logicmonitor.sdk.data.model.DataSource;
 import com.logicmonitor.sdk.data.model.DataSourceInstance;
@@ -52,6 +53,8 @@ public class TestMetrics {
   Metrics metrics = Mockito.mock(Metrics.class, Mockito.CALLS_REAL_METHODS);
   Configuration conf = Mockito.mock(Configuration.class);
   ApiClient client = Mockito.mock(ApiClient.class);
+
+  BatchingCache batchingCache = Mockito.mock(BatchingCache.class);
 
   void setUp() {
     metrics.setBatch(true);
@@ -127,9 +130,10 @@ public class TestMetrics {
     Mockito.when(conf.setCompany()).thenReturn("https://company01.test.com/rest");
   }
 
-  @Test(expected = Exception.class)
-  public void testCreateRestMetricsBody() throws IOException {
+  @Test
+  public void testCreateRestMetricsBody() throws IOException, ApiException {
 
+    List<String> list = new ArrayList<>();
     List<RestMetricsV1> expected = new ArrayList<>();
     RestMetricsV1 restMetrics;
     List<RestDataSourceInstanceV1> instances = new ArrayList<>();
@@ -164,6 +168,8 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
   }
 
   @Test(expected = Exception.class)
@@ -192,9 +198,10 @@ public class TestMetrics {
     metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint, values);
   }
 
-  @Test(expected = Exception.class)
-  public void testCreateTrue() throws IOException {
+  @Test
+  public void testCreateTrue() throws IOException, ApiException {
 
+    List<String> list = new ArrayList<>();
     List<RestMetricsV1> expected = new ArrayList<>();
     RestMetricsV1 restMetrics;
     List<RestDataSourceInstanceV1> instances = new ArrayList<>();
@@ -224,6 +231,8 @@ public class TestMetrics {
         payloadCache = new HashMap<>();
     Mockito.when(metrics.getPayloadCache()).thenReturn(payloadCache);
     metrics.createRestMetricsBody(resourceBody);
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
   }
 
   @Test(expected = Exception.class)

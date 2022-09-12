@@ -39,7 +39,13 @@ metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint2, cpuUsa
 ```
 
 While Metrics Ingestion we will be passing either single request or batching request, "Batching is Bluk of request will be passed in single API call".
-To determine if user is sending bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly.
+To determine if user is sending bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly by default batch is set as true.
+
+We also have Gzip functionality where the data will be send in the compressed form.The gzip format is a technique used to speed up the sending of data over the internet .Gzip compression is used increase the throughput of data. we have boolean variable as "gzip" which can be true or false accordingly by default, Gzip is set as true.
+
+We have also implemented  rate limit in Data-SDK where "requestPerMin" is integer variable which is used to set maximum number of request to be invoke per min, by default it's set to 100. This helps to avoid the data loss from new request above maximum limit.This is "Time-Based-Rate-Limit".
+
+There is a size-based rate limiting feature that limits the payload with 104858 bytes being the payload limit during compression and 1048576 bytes being the no compression payload limit. 100 instances are allowed.
 
 Read below for understanding more about Models in SDK.
 

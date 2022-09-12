@@ -59,6 +59,15 @@ public class Logs extends BatchingCache {
   }
 
   /**
+   * @param conf This is configuration variable
+   * @param apiCallback This is ApiCallback variable
+   */
+  public Logs(final Configuration conf, ApiCallback apiCallback) {
+    super(conf, apiCallback);
+    apiClient.setBasePath(Configuration.setCompany());
+  }
+
+  /**
    * @param logsV1 This logInput attribute
    * @return
    * @throws ApiException
@@ -118,7 +127,9 @@ public class Logs extends BatchingCache {
         responseHandler(response);
       }
     } catch (ApiException e) {
-      apiCallback.onFailure(e, e.getCode(), e.getResponseHeaders());
+      if (apiCallback != null) {
+        apiCallback.onFailure(e, e.getCode(), e.getResponseHeaders());
+      }
     }
   }
 

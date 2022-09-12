@@ -32,7 +32,13 @@ logs.sendLogs("Testing log Api", resource, metadata);
 ```
 
 While Logs Ingestion we will be passing either single request or batching request, "Batching is Bluk of request will be passed in single API call". 
-To determine if user is sending bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly.
+To determine if user is sending bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly by default batch is set as true.
+
+We also have Gzip functionality where the data will be send in the compressed form.The gzip format is a technique used to speed up the sending of data over the internet .Gzip compression is used increase the throughput of data. we have boolean variable as "gzip" which can be true or false accordingly by default, Gzip is set as true.
+
+We have also implemented rate limit in Data-SDK where "requestPerMin" is integer variable which is used to set maximum number of requests to be invoke per min, by default it's set to 100. This helps to avoid the data loss from new request above maximum limit.
+
+There is a size-based rate limiting feature that limits the payload with 8 MB of data, and maximum array size for single log message is 32 KB if the limit of log message exceeds we will be logging it as a warning to the user as "Your message exceeds 32KB It will be truncate"
 
 <a name="Model"></a>
 

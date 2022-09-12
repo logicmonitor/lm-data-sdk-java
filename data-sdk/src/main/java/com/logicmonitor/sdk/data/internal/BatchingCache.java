@@ -52,7 +52,7 @@ public abstract class BatchingCache {
 
   /** @param conf This is configuration variable */
   public BatchingCache(final Configuration conf) {
-    this(conf, 0, false);
+    this(conf, 10, true);
   }
 
   /**
@@ -82,6 +82,15 @@ public abstract class BatchingCache {
     apiCallback = responseCallback;
 
     checkBatch();
+  }
+
+  /**
+   * @param conf
+   * @param responseCallback
+   */
+  public BatchingCache(final Configuration conf, ApiCallback responseCallback) {
+    this(conf, 10, true);
+    apiCallback = responseCallback;
   }
 
   /** @param response */

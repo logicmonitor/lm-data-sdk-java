@@ -38,8 +38,8 @@ cpuUsageValue.put(String.valueOf(Instant.now().getEpochSecond()), cpuUsageMetric
 metrics.sendMetrics(resource, dataSource, dataSourceInstance, dataPoint2, cpuUsageValue);
 ```
 
-While Metrics Ingestion we will be passing either single request or batching request, "Batching is Bluk of request will be passed in single API call".
-To determine if user is sending bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly by default batch is set as true.
+While Metrics Ingestion we will be passing either single request or batching request, "Batching is Bluk of request passed in single API call".
+To determine if the request  is bathing request or single request, we have boolean variable as "batch" which can be true or false accordingly by default batch is set as true.
 
 We also have Gzip functionality where the data will be send in the compressed form.The gzip format is a technique used to speed up the sending of data over the internet .Gzip compression is used increase the throughput of data. we have boolean variable as "gzip" which can be true or false accordingly by default, Gzip is set as true.
 

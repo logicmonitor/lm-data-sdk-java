@@ -8,6 +8,7 @@
 package com.logicmonitor.sdk.data.api;
 
 import com.logicmonitor.sdk.data.Configuration;
+import com.logicmonitor.sdk.data.internal.BatchingCache;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.IOException;
 import java.util.*;
@@ -23,6 +24,7 @@ public class TestLogs {
   Logs logs = Mockito.mock(Logs.class, Mockito.CALLS_REAL_METHODS);
   Configuration conf = Mockito.mock(Configuration.class);
   ApiClient client = Mockito.mock(ApiClient.class);
+  BatchingCache batchingCache = Mockito.mock(BatchingCache.class);
 
   void setUp() {
     logs.setBatch(true);
@@ -86,10 +88,13 @@ public class TestLogs {
     Assert.assertTrue("This will succeed.", true);
   }
 
-  @Test(expected = Exception.class)
-  public void testDoRequest() {
+  @Test
+  public void testDoRequest() throws IOException, ApiException {
+    List<String> list = new ArrayList<>();
     setPayload();
     logs.doRequest();
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
   }
 
   @Test(expected = ApiException.class)
@@ -140,9 +145,12 @@ public class TestLogs {
     Logs.singleRequest(input);
   }
 
-  @Test(expected = Exception.class)
-  public void testDoRequestForMsgAbove32KB() {
+  @Test
+  public void testDoRequestForMsgAbove32KB() throws IOException, ApiException {
+    List<String> list = new ArrayList<>();
     setPayloadCacheForMsgAbove32KB();
     logs.doRequest();
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
   }
 }

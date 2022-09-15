@@ -79,6 +79,15 @@ public class Metrics extends BatchingCache {
     apiClient.setBasePath(conf.setCompany());
   }
 
+  /**
+   * @param conf This is configuration variable
+   * @param apiCallback ApiCallback Attribute
+   */
+  public Metrics(final Configuration conf, ApiCallback apiCallback) {
+    super(conf, apiCallback);
+    apiClient.setBasePath(conf.setCompany());
+  }
+
   /** @param conf This is configuration variable */
   public Metrics(final Configuration conf) {
     super(conf);
@@ -286,7 +295,9 @@ public class Metrics extends BatchingCache {
         responseHandler(response);
       }
     } catch (ApiException e) {
-      apiCallback.onFailure(e, e.getCode(), e.getResponseHeaders());
+      if (apiCallback != null) {
+        apiCallback.onFailure(e, e.getCode(), e.getResponseHeaders());
+      }
     }
     getPayloadCache().remove(removeElement);
   }

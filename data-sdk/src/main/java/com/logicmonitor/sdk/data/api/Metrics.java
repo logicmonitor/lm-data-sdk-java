@@ -352,20 +352,20 @@ public class Metrics extends BatchingCache {
       if (instance.size() <= Constant.DEFAULT_PUSHMETRICS_MAXIMUM_INSTANCES_ALLOWED) {
         if (!instance.containsKey(singleRequest.getDataSourceInstance())) {
           instance.put(singleRequest.getDataSourceInstance(), new HashMap<>());
+          final Map<DataPoint, Map<String, String>> dataPoint =
+              instance.get(singleRequest.getDataSourceInstance());
+          if (!dataPoint.containsKey(singleRequest.getDataPoint())) {
+            dataPoint.put(singleRequest.getDataPoint(), new HashMap<>());
+          }
+          final Map<String, String> value = dataPoint.get(singleRequest.getDataPoint());
+
+          for (final Entry<String, String> item : singleRequest.getValues().entrySet()) {
+            value.put(item.getKey(), item.getValue());
+          }
         }
       } else {
         getRequest().add(singleRequest);
         doRequest();
-      }
-      final Map<DataPoint, Map<String, String>> dataPoint =
-          instance.get(singleRequest.getDataSourceInstance());
-      if (!dataPoint.containsKey(singleRequest.getDataPoint())) {
-        dataPoint.put(singleRequest.getDataPoint(), new HashMap<>());
-      }
-      final Map<String, String> value = dataPoint.get(singleRequest.getDataPoint());
-
-      for (final Entry<String, String> item : singleRequest.getValues().entrySet()) {
-        value.put(item.getKey(), item.getValue());
       }
     } else {
       getRequest().add(singleRequest);

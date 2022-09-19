@@ -76,6 +76,13 @@ public class TestLogs {
     logs.setLogPayloadCache(logPayloadCache);
   }
 
+  public void setPayloadForNullMessageField() {
+    LogsInput input = new LogsInput(null, resourceIds, "1789765436", null);
+    List<LogsInput> logPayloadCache = new ArrayList<>();
+    logPayloadCache.add(input);
+    logs.setLogPayloadCache(logPayloadCache);
+  }
+
   @Test
   public void testMergeRequest() {
     setPayloadCache();
@@ -149,6 +156,27 @@ public class TestLogs {
   public void testDoRequestForMsgAbove32KB() throws IOException, ApiException {
     List<String> list = new ArrayList<>();
     setPayloadCacheForMsgAbove32KB();
+    logs.doRequest();
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
+  }
+
+  @Test(expected = ApiException.class)
+  public void testSingleRequestWithMessageFieldNull() throws ApiException, IOException {
+    List<String> list = new ArrayList<>();
+    HashMap<String, String> metadata = new HashMap<String, String>();
+    metadata.put("method", "sdk");
+    metadata.put("compression", "compressed");
+    LogsInput input = new LogsInput(null, resourceIds, "1789765436", metadata);
+    Logs.singleRequest(input);
+    Mockito.verify(batchingCache, Mockito.times(0))
+        .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());
+  }
+
+  @Test
+  public void testDoRequestWithMessageFieldNull() throws IOException, ApiException {
+    List<String> list = new ArrayList<>();
+    setPayloadForNullMessageField();
     logs.doRequest();
     Mockito.verify(batchingCache, Mockito.times(0))
         .makeRequest(list, "/v2/metric/ingest", "POST", true, false, Configuration.getgZip());

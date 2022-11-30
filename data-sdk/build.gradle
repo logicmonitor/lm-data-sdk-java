@@ -136,4 +136,11 @@ publishing {
     }
 }
 
+task copyToLib( type: Copy ) {
+    into "$buildDir/extra-libs"
+    from configurations.runtimeClasspath
+}
+
+jar { dependsOn copyToLib }
+
 description = 'data-sdk'

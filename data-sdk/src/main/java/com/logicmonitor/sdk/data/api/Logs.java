@@ -148,7 +148,7 @@ public class Logs extends BatchingCache {
       final Map<String, String> resourceId,
       final Map<String, String> metadata)
       throws IOException, ApiException {
-    final String timeStamp = String.valueOf(Instant.now().getEpochSecond());
+    final String timeStamp = String.valueOf(Instant.now().toEpochMilli());
     final LogsInput logsV1 = new LogsInput(message, resourceId, timeStamp, metadata);
 
     if (batch) {

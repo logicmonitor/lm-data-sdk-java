@@ -146,10 +146,15 @@ public class Logs extends BatchingCache {
   public Optional<ApiResponse> sendLogs(
       final String message,
       final Map<String, String> resourceId,
-      final Map<String, String> metadata)
+      final Map<String, String> metadata,
+      long timeStamp)
       throws IOException, ApiException {
-    final String timeStamp = String.valueOf(Instant.now().getEpochSecond());
-    final LogsInput logsV1 = new LogsInput(message, resourceId, timeStamp, metadata);
+    if (timeStamp != 0L) {
+      timeStamp = timeStamp % 1000;
+    } else {
+      timeStamp = Instant.now().toEpochMilli();
+    }
+    final LogsInput logsV1 = new LogsInput(message, resourceId, Long.toString(timeStamp), metadata);
 
     if (batch) {
       addRequest(logsV1);

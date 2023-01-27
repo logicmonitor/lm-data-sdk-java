@@ -47,7 +47,8 @@ public class TestLogs {
   @Test
   public void testSendLogs() throws IOException, ApiException {
     setUp();
-    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, null)).thenReturn(null);
+    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, null, 0L))
+        .thenReturn(null);
     Assert.assertTrue("This will succeed.", true);
   }
 
@@ -123,7 +124,8 @@ public class TestLogs {
   @Test
   public void testSendLogsForBatchFalse() throws IOException, ApiException {
     setUpBatchFalse();
-    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, null)).thenReturn(null);
+    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, null, 1674036943L))
+        .thenReturn(null);
     Assert.assertTrue("This will succeed.", true);
   }
 
@@ -133,7 +135,8 @@ public class TestLogs {
     HashMap<String, String> metadata = new HashMap<String, String>();
     metadata.put("method", "sdk");
     metadata.put("compression", "compressed");
-    Mockito.when(logs.sendLogs("Testing log Api second call", resourceIds, metadata))
+    Mockito.when(
+            logs.sendLogs("Testing log Api second call", resourceIds, metadata, 1674036943000L))
         .thenReturn(null);
     Assert.assertTrue("This will succeed.", true);
   }

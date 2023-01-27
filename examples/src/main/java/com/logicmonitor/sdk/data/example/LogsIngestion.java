@@ -27,14 +27,14 @@ public class LogsIngestion {
         final Logs logs = new Logs(conf, 10, false, responseInterface);
         while (true) {
             try {
-                Optional<ApiResponse> response = logs.sendLogs("Testing log Api", resourceIds, null);
+                Optional<ApiResponse> response = logs.sendLogs("Testing log Api", resourceIds, null,0L);
                 if (response != null && response.isPresent()) {
                     log.debug(
                           "Response: Status: " + response.get().getStatusCode() + " Headers: "
                                     + response.get().getHeaders() + " Data: " + response.get().getData());
                 }
                 response = logs.sendLogs("Testing log Api second call", resourceIds,
-                        null);
+                        null,1674036943L);
                 if (response != null && response.isPresent()) {
                     log.debug("Response: Status: " + response.get().getStatusCode() + " Headers: "
                                     + response.get().getHeaders() + " Data: " + response.get().getData());

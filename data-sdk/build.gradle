@@ -72,6 +72,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
+    testImplementation "com.github.stefanbirkner:system-lambda:1.0.0"
+
 }
 
 task codeCoverageReport(type: JacocoReport) {
@@ -81,9 +83,9 @@ task codeCoverageReport(type: JacocoReport) {
         sourceSets it.sourceSets.main
     }
     reports {
-        xml.enabled true
+        xml.enabled false
         xml.destination file("${buildDir}/reports/jacoco/report.xml")
-        html.enabled false
+        html.enabled true
         csv.enabled false
     }
     afterEvaluate {

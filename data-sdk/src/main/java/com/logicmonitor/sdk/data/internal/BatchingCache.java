@@ -9,6 +9,7 @@ package com.logicmonitor.sdk.data.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.logicmonitor.sdk.data.ApiClientUserAgent;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.ByteArrayOutputStream;
@@ -184,7 +185,7 @@ public abstract class BatchingCache {
       boolean gZip)
       throws ApiException, IOException {
 
-    final ApiClient apiClient = new ApiClient();
+    final ApiClientUserAgent apiClient = new ApiClientUserAgent();
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();

@@ -15,6 +15,10 @@ public class ApiClientUserAgent extends ApiClient {
   Setup setup = new Setup();
 
   public ApiClientUserAgent() {
+    String applicationName = "";
+    if (System.getenv("APPLICATION_NAME") != null) {
+      applicationName = "/" + System.getenv("APPLICATION_NAME");
+    }
     setUserAgent(
         String.format(setup.getPACKAGE_ID())
             .concat(
@@ -25,7 +29,8 @@ public class ApiClientUserAgent extends ApiClient {
                     + setup.getOS_NAME()
                     + ";arch "
                     + setup.getARCH()
-                    + ")"));
+                    + ")"
+                    + applicationName));
   }
 
   /**

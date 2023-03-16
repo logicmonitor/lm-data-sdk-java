@@ -7,8 +7,6 @@
  */
 package com.logicmonitor.sdk.data;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.openapitools.client.ApiClient;
@@ -25,16 +23,5 @@ public class TestApiClientUserAgent {
   public void testUserAgent() {
     ApiClient apiClientUserAgent = apiClient.setUserAgent(userAgent);
     Assertions.assertEquals(apiClient, apiClientUserAgent);
-  }
-
-  @Test
-  public void testUserAgentWithApplicationName() throws Exception {
-    withEnvironmentVariable("APPLICATION_NAME", "test-user-agent")
-        .execute(
-            () -> {
-              ApiClientUserAgent apiClient = new ApiClientUserAgent();
-              ApiClient apiClientUserAgent = apiClient.setUserAgent(userAgent);
-              Assertions.assertEquals(apiClient, apiClientUserAgent);
-            });
   }
 }

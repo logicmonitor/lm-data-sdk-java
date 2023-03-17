@@ -29,10 +29,6 @@ public class ApiClientUserAgent extends ApiClient {
   }
 
   public ApiClientUserAgent(String userAgentSuffix) {
-    String applicationName = "";
-    if (userAgentSuffix != null && userAgentSuffix.length() <= 32) {
-      applicationName = "/" + userAgentSuffix;
-    }
     setUserAgent(
         String.format(setup.getPACKAGE_ID())
             .concat(
@@ -44,7 +40,7 @@ public class ApiClientUserAgent extends ApiClient {
                     + ";arch "
                     + setup.getARCH()
                     + ")"
-                    + applicationName));
+                    + userAgentSuffix));
   }
 
   /**

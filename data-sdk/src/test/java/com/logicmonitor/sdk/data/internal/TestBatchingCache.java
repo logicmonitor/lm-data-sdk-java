@@ -156,4 +156,16 @@ public class TestBatchingCache {
     boolean var = batchingCache.checkNumberOfRequest("log/ingest");
     Assert.assertEquals(var, Boolean.TRUE);
   }
+
+  @Test
+  public void testUserAgentWithSuffixGreaterThan32Char() {
+    String testString = "test-application-application-name-32char";
+    Assertions.assertEquals("", batchingCache.getUserAgentSuffix(testString));
+  }
+
+  @Test
+  public void testUserAgentWithSuffix() {
+    String testString = "test-application";
+    Assertions.assertEquals("/test-application", batchingCache.getUserAgentSuffix(testString));
+  }
 }

@@ -185,7 +185,8 @@ public abstract class BatchingCache {
       boolean gZip)
       throws ApiException, IOException {
 
-    final ApiClientUserAgent apiClient = new ApiClientUserAgent(System.getenv("APPLICATION_NAME"));
+    String userAgentSuffix = getUserAgentSuffix(System.getenv("APPLICATION_NAME"));
+    final ApiClientUserAgent apiClient = new ApiClientUserAgent(userAgentSuffix);
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();
@@ -343,5 +344,13 @@ public abstract class BatchingCache {
    */
   public static void setStartTime(long startTime) {
     BatchingCache.startTime = startTime;
+  }
+
+  public String getUserAgentSuffix(String userAgentSuffix) {
+    String applicationName = "";
+    if (userAgentSuffix != null && userAgentSuffix.length() <= 32) {
+      applicationName = "/" + userAgentSuffix;
+    }
+    return applicationName;
   }
 }

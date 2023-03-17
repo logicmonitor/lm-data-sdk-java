@@ -185,7 +185,7 @@ public abstract class BatchingCache {
       boolean gZip)
       throws ApiException, IOException {
 
-    final ApiClientUserAgent apiClient = new ApiClientUserAgent();
+    final ApiClientUserAgent apiClient = new ApiClientUserAgent(System.getenv("APPLICATION_NAME"));
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();

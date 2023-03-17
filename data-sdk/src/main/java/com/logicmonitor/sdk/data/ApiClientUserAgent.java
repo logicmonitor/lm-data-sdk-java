@@ -15,9 +15,23 @@ public class ApiClientUserAgent extends ApiClient {
   Setup setup = new Setup();
 
   public ApiClientUserAgent() {
+    setUserAgent(
+        String.format(setup.getPACKAGE_ID())
+            .concat(
+                setup.getPACKAGE_VERSION()
+                    + " (Java "
+                    + setup.getJAVA_VERSION()
+                    + ";"
+                    + setup.getOS_NAME()
+                    + ";arch "
+                    + setup.getARCH()
+                    + ")"));
+  }
+
+  public ApiClientUserAgent(String userAgentSuffix) {
     String applicationName = "";
-    if (System.getenv("APPLICATION_NAME") != null) {
-      applicationName = "/" + System.getenv("APPLICATION_NAME");
+    if (userAgentSuffix != null && userAgentSuffix.length() <= 32) {
+      applicationName = "/" + userAgentSuffix;
     }
     setUserAgent(
         String.format(setup.getPACKAGE_ID())

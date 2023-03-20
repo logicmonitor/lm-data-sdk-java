@@ -9,6 +9,7 @@ package com.logicmonitor.sdk.data.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.logicmonitor.sdk.data.ApiClientUserAgent;
 import com.logicmonitor.sdk.data.Configuration;
 import com.logicmonitor.sdk.data.model.*;
 import java.io.ByteArrayOutputStream;
@@ -184,7 +185,8 @@ public abstract class BatchingCache {
       boolean gZip)
       throws ApiException, IOException {
 
-    final ApiClient apiClient = new ApiClient();
+    String userAgentSuffix = getUserAgentSuffix(System.getenv("APPLICATION_NAME"));
+    final ApiClientUserAgent apiClient = new ApiClientUserAgent(userAgentSuffix);
     final Pair pair = new Pair("create", String.valueOf(create));
     final List<Pair> queryParams = new ArrayList<>();
     final List<Pair> collectionQueryParams = new ArrayList<>();
@@ -342,5 +344,13 @@ public abstract class BatchingCache {
    */
   public static void setStartTime(long startTime) {
     BatchingCache.startTime = startTime;
+  }
+
+  public String getUserAgentSuffix(String userAgentSuffix) {
+    String applicationName = "";
+    if (userAgentSuffix != null && userAgentSuffix.length() <= 32) {
+      applicationName = "/" + userAgentSuffix;
+    }
+    return applicationName;
   }
 }

@@ -24,4 +24,11 @@ public class TestApiClientUserAgent {
     ApiClient apiClientUserAgent = apiClient.setUserAgent(userAgent);
     Assertions.assertEquals(apiClient, apiClientUserAgent);
   }
+
+  @Test
+  public void testUserAgentWithSuffix() {
+    ApiClientUserAgent apiClient = new ApiClientUserAgent("test-application");
+    ApiClient apiClientUserAgent = apiClient.setUserAgent(userAgent);
+    Assertions.assertEquals(apiClient, apiClientUserAgent);
+  }
 }

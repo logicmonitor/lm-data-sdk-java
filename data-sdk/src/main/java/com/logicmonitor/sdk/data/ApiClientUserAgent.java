@@ -28,6 +28,21 @@ public class ApiClientUserAgent extends ApiClient {
                     + ")"));
   }
 
+  public ApiClientUserAgent(String userAgentSuffix) {
+    setUserAgent(
+        String.format(setup.getPACKAGE_ID())
+            .concat(
+                setup.getPACKAGE_VERSION()
+                    + " (Java "
+                    + setup.getJAVA_VERSION()
+                    + ";"
+                    + setup.getOS_NAME()
+                    + ";arch "
+                    + setup.getARCH()
+                    + ")"
+                    + userAgentSuffix));
+  }
+
   /**
    * This Method is overriden from ApiClient.
    *

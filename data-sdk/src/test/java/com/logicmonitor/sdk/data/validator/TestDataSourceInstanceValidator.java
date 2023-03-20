@@ -89,6 +89,16 @@ public class TestDataSourceInstanceValidator {
   }
 
   @Test
+  public void providedInvalidInstancePropertiesValues() {
+    String expected =
+        "Invalid instance properties value : 1!@#$%^&*() for Key : instancePropertyKey.";
+    Map<String, String> instanceProperties = new HashMap<>();
+    instanceProperties.put("instancePropertyKey", "1!@#$%^&*()");
+    Assertions.assertEquals(
+        expected, instanceValidator.checkInstancePropertiesValidation(instanceProperties));
+  }
+
+  @Test
   public void testPassEmptyAndSpellCheck() {
     Assertions.assertEquals(true, instanceValidator.passEmptyAndSpellCheck(" DataSourceInstance"));
   }

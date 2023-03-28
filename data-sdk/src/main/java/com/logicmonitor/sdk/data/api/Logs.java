@@ -149,9 +149,7 @@ public class Logs extends BatchingCache {
       final Map<String, String> metadata,
       long timeStamp)
       throws IOException, ApiException {
-    if (timeStamp != 0L) {
-      timeStamp = timeStamp % 1000;
-    } else {
+    if (timeStamp == 0L) {
       timeStamp = Instant.now().toEpochMilli();
     }
     final LogsInput logsV1 = new LogsInput(message, resourceId, Long.toString(timeStamp), metadata);

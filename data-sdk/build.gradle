@@ -7,6 +7,7 @@ plugins {
     id 'java-library'
     id 'jacoco'
     id 'maven-publish'
+    id 'org.cyclonedx.bom' version '1.6.1'
 }
 apply from: "${rootProject.projectDir}/gradle/spotless.gradle"
 
@@ -28,6 +29,13 @@ task buildApiIngestJavaClient(type: org.openapitools.generator.gradle.plugin.tas
             dateLibrary      : "java8",
             useBeanValidation: "true"
     ]
+}
+
+cyclonedxBom {
+    includeConfigs = ["runtimeClasspath"]
+    skipConfigs = ["compileClasspath", "testCompileClasspath"]
+    destination = file("../../sbom")
+    outputName = "bom"
 }
 /*
 task generateCode(type: Copy, dependsOn: ['buildApiIngestJavaClient']) {

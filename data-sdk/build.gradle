@@ -7,7 +7,7 @@ plugins {
     id 'java-library'
     id 'jacoco'
     id 'maven-publish'
-    id 'org.cyclonedx.bom' version '1.6.1'
+    id 'org.cyclonedx.bom' version '1.7.4'
 }
 apply from: "${rootProject.projectDir}/gradle/spotless.gradle"
 

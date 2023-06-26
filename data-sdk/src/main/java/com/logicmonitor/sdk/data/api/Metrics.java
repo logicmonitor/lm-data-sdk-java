@@ -40,7 +40,8 @@ public class Metrics extends BatchingCache {
   private static final String PATH = "/v2/metric/ingest";
 
   private static final String METHOD = "POST";
-  private final ApiClientUserAgent userAgent = new ApiClientUserAgent();
+  // camelcase variable naming userAgent
+  private final ApiClientUserAgent useragent = new ApiClientUserAgent();
 
   private ApiClient apiClient = new ApiClient();
 
@@ -230,6 +231,19 @@ public class Metrics extends BatchingCache {
               valuePairs.put(value.getKey(), value.getValue());
             }
 
+            if(dataPoint.getName().equals(dataPoint.getType())){
+              System.out.println("Should use StringUtils");
+            }
+            if(StringUtils.isEmpty(dataPoint.getName())){
+              if(StringUtils.isEmpty(dataPoint.getType())){
+                  if(StringUtils.length(dataPoint.getName()) > 1){
+                      if(StringUtils.length(dataPoint.getType()) > 2){
+                          System.out.println("all if conditions satisfied");
+                      }
+                  }
+              }
+            }
+
             final RestDataPointV1 restDataPoint =
                 new RestDataPointV1()
                     .dataPointAggregationType(dataPoint.getAggregationType())
@@ -272,7 +286,8 @@ public class Metrics extends BatchingCache {
       }
     }
     try {
-      if (null != listOfRestMetricsV1CreateTrue && listOfRestMetricsV1CreateTrue.size() > 0) {
+      // can throw NPE
+      if (listOfRestMetricsV1CreateTrue.size() > 0) {
         response =
             makeRequest(
                 listOfRestMetricsV1CreateTrue,

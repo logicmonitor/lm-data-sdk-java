@@ -15,6 +15,7 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This Class is used to configure the device with account name and Lm access credinatial(by using
@@ -117,7 +118,7 @@ public class Configuration {
     domainName = getDomainName();
 
     //    host = "https://" + company + ".logicmonitor.com/rest";
-    if (domainName == null || domainName.length() <= 0 || domainName.equals(" ")) {
+    if (StringUtils.isBlank(domainName)) {
       domainName = "logicmonitor.com";
     }
     host = "https://" + company + "." + domainName + "/rest";
@@ -163,7 +164,7 @@ public class Configuration {
     }
 
     //    this.host = "https://" + this.company + ".logicmonitor.com/rest";
-    if (domainName == null || domainName.length() <= 0 || domainName.equals(" ")) {
+    if (StringUtils.isBlank(domainName)) {
       domainName = "logicmonitor.com";
     }
     this.host = "https://" + company + "." + domainName + "/rest";

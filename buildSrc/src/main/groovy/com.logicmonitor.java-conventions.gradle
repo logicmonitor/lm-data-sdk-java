@@ -16,7 +16,7 @@ dependencies {
 }
 
 group = 'com.logicmonitor'
-version = '0.0.4-alpha'
+version = '0.0.4-alpha-govCloud'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 

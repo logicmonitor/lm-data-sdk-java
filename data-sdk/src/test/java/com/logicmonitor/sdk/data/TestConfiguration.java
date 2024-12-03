@@ -34,21 +34,22 @@ public class TestConfiguration {
 
   @Test
   public void testConfiguration() {
-    Configuration conf = new Configuration("company01", null, null, "bhasgsyhsjjdbfbhcgyi@1");
+    Configuration conf =
+        new Configuration("company01", null, null, "bhasgsyhsjjdbfbhcgyi@1", "logicmonitor.com");
     String actualToken = conf.getAuthToken("POST", "POST", "/v2/metric/ingest");
     Assertions.assertTrue(true, actualToken);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidBearerAuth() {
-    Configuration conf = new Configuration("company01", null, null, " ");
+    Configuration conf = new Configuration("company01", null, null, " ", "logicmonitor.com");
     boolean authentication = conf.checkAuthentication();
     Assertions.assertEquals(IllegalArgumentException.class, authentication);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidLMv1Auth() {
-    Configuration conf = new Configuration("company01", " ", " ", null);
+    Configuration conf = new Configuration("company01", " ", " ", null, "logicmonitor.com");
     boolean authentication = conf.checkAuthentication();
     Assertions.assertEquals(IllegalArgumentException.class, authentication);
   }
@@ -64,14 +65,19 @@ public class TestConfiguration {
   public void testLMv1Auth() {
     Configuration conf =
         new Configuration(
-            "company01", "5t5U5jH6Q92P2n8x8tg5", "[KC5sdqL-vX25-35pP2gmPw(f_15W(]LLg(B4Kc8", null);
+            "company01",
+            "5t5U5jH6Q92P2n8x8tg5",
+            "[KC5sdqL-vX25-35pP2gmPw(f_15W(]LLg(B4Kc8",
+            null,
+            "logicmonitor.com");
     conf.getAuthToken(body, "POST", "/v2/metric/ingest");
     Assert.assertTrue("This will succeed.", true);
   }
 
   @Test
   public void testBearerAuth() {
-    Configuration conf = new Configuration("company01", null, null, "bhasgsyhsjjdbfbhcgyi@1");
+    Configuration conf =
+        new Configuration("company01", null, null, "bhasgsyhsjjdbfbhcgyi@1", "logicmonitor.com");
     String expectedToken = "Bearer bhasgsyhsjjdbfbhcgyi@1";
     String actualToken = conf.getAuthToken("POST", "POST", "/v2/metric/ingest");
     Assertions.assertEquals(expectedToken, actualToken);

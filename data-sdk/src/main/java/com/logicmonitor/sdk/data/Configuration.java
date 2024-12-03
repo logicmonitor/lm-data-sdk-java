@@ -15,6 +15,7 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This Class is used to configure the device with account name and Lm access credinatial(by using
@@ -28,6 +29,7 @@ public class Configuration {
   private final String REGEX_AUTH_ID = "^[a-zA-Z0-9]+$";
   private final Pattern PatternAuthId = Pattern.compile(REGEX_AUTH_ID);
   private static String company;
+  private static String domainName;
   private static String host;
   private int connectionPoolMaxsize;
 
@@ -50,6 +52,7 @@ public class Configuration {
     accessId = System.getenv("LM_ACCESS_ID");
     accessKey = System.getenv("LM_ACCESS_KEY");
     bearerToken = System.getenv("LM_BEARER_TOKEN");
+    domainName = System.getenv("LM_DOMAIN_NAME");
 
     checkAuthentication();
   }
@@ -59,12 +62,15 @@ public class Configuration {
    * @param accessId
    * @param accessKey
    * @param bearerToken
+   * @param domainName
    */
-  public Configuration(String company, String accessId, String accessKey, String bearerToken) {
+  public Configuration(
+      String company, String accessId, String accessKey, String bearerToken, String domainName) {
     this.company = (company != null) ? company : System.getenv("LM_COMPANY");
     this.accessId = (accessId != null) ? accessId : System.getenv("LM_ACCESS_ID");
     this.accessKey = (accessKey != null) ? accessKey : System.getenv("LM_ACCESS_KEY");
     this.bearerToken = (bearerToken != null) ? bearerToken : System.getenv("LM_BEARER_TOKEN");
+    this.domainName = (domainName != null) ? domainName : System.getenv("LM_DOMAIN_NAME");
 
     checkAuthentication();
   }
@@ -109,7 +115,13 @@ public class Configuration {
 
   public static String setCompany() {
     company = getCompany();
-    host = "https://" + company + ".logicmonitor.com/rest";
+    domainName = getDomainName();
+
+    //    host = "https://" + company + ".logicmonitor.com/rest";
+    if (StringUtils.isBlank(domainName)) {
+      domainName = "logicmonitor.com";
+    }
+    host = "https://" + company + "." + domainName + "/rest";
     return host;
   }
 
@@ -121,6 +133,7 @@ public class Configuration {
     if (company == null || company.length() <= 0 || company.equals(" ")) {
       throw new IllegalArgumentException("Company must have your account name");
     }
+
     if (!isValidCompanyName(company)) {
       throw new IllegalArgumentException("Invalid Company Name");
     }
@@ -150,7 +163,11 @@ public class Configuration {
       }
     }
 
-    this.host = "https://" + this.company + ".logicmonitor.com/rest";
+    //    this.host = "https://" + this.company + ".logicmonitor.com/rest";
+    if (StringUtils.isBlank(domainName)) {
+      domainName = "logicmonitor.com";
+    }
+    this.host = "https://" + company + "." + domainName + "/rest";
     this.connectionPoolMaxsize = Runtime.getRuntime().availableProcessors() * 5;
     return true;
   }
@@ -215,6 +232,10 @@ public class Configuration {
   /** @return company */
   public static String getCompany() {
     return company;
+  }
+
+  public static String getDomainName() {
+    return domainName;
   }
 
   /** @return gZip */

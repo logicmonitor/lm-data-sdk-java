@@ -18,6 +18,7 @@ import lombok.Setter;
 public class LogsInput implements Input {
 
   private String message;
+  private String logLevel;
   private Map<String, String> resourceId;
   private String timeStamp;
   private Map<String, String> metadata;

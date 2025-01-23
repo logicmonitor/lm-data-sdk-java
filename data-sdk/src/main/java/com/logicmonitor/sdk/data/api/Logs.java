@@ -81,6 +81,7 @@ public class Logs extends BatchingCache {
     body.put("message", logsV1.getMessage());
     body.put("_lm.resourceId", logsV1.getResourceId());
     body.put("timestamp", logsV1.getTimeStamp());
+    body.put("log_level",logsV1.getLogLevel());
     if (logsV1.getMetadata() != null) {
       for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
         body.put(entry.getKey(), entry.getValue());
@@ -145,6 +146,7 @@ public class Logs extends BatchingCache {
    */
   public Optional<ApiResponse> sendLogs(
       final String message,
+      final String logLevel,
       final Map<String, String> resourceId,
       final Map<String, String> metadata,
       long timeStamp)
@@ -152,7 +154,7 @@ public class Logs extends BatchingCache {
     if (timeStamp == 0L) {
       timeStamp = Instant.now().toEpochMilli();
     }
-    final LogsInput logsV1 = new LogsInput(message, resourceId, Long.toString(timeStamp), metadata);
+    final LogsInput logsV1 = new LogsInput(message, logLevel, resourceId, Long.toString(timeStamp), metadata);
 
     if (batch) {
       addRequest(logsV1);
@@ -170,6 +172,7 @@ public class Logs extends BatchingCache {
       body.put("message", logsV1.getMessage());
       body.put("_lm.resourceId", logsV1.getResourceId());
       body.put("timestamp", logsV1.getTimeStamp());
+      body.put("log_level",logsV1.getLogLevel());
       if (logsV1.getMetadata() != null) {
         for (Map.Entry<String, String> entry : logsV1.getMetadata().entrySet()) {
           body.put(entry.getKey(), entry.getValue());

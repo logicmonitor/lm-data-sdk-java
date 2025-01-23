@@ -27,17 +27,17 @@ public class LogsIngestion {
         final Logs logs = new Logs(conf, 10, false, responseInterface);
         while (true) {
             try {
-                Optional<ApiResponse> response = logs.sendLogs("Testing log Api", resourceIds, null,0L);
+                Optional<ApiResponse> response = logs.sendLogs("Testing log Api","WARN", resourceIds, null,0L);
                 if (response != null && response.isPresent()) {
                     log.debug(
-                          "Response: Status: " + response.get().getStatusCode() + " Headers: "
+                            "Response: Status: " + response.get().getStatusCode() + " Headers: "
                                     + response.get().getHeaders() + " Data: " + response.get().getData());
                 }
-                response = logs.sendLogs("Testing log Api second call", resourceIds,
-                        null,1674036943L);
+                response = logs.sendLogs("Testing log Api second call","ERROR", resourceIds,
+                        null,0L);
                 if (response != null && response.isPresent()) {
                     log.debug("Response: Status: " + response.get().getStatusCode() + " Headers: "
-                                    + response.get().getHeaders() + " Data: " + response.get().getData());
+                            + response.get().getHeaders() + " Data: " + response.get().getData());
                 }
             } catch (final ApiException | IOException e) {
                 log.error("Exception while sending logs.", e);

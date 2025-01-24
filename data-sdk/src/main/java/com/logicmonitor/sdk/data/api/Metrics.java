@@ -463,6 +463,7 @@ public class Metrics extends BatchingCache {
   protected void doRequest() {
     createRestMetricsBody(payloadCache);
   }
+
   /** @param validator */
   public void setValidator(Validator validator) {
     this.validator = validator;

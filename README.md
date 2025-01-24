@@ -29,7 +29,7 @@ Add the package dependencies to your build.gradle or pom.xml
 
 ```groovy
 dependencies {
-    implementation('com.logicmonitor:lm-data-sdk:0.0.1-alpha')
+    implementation('com.logicmonitor:lm-data-sdk:0.0.6-alpha')
 }
 ```
 
@@ -40,7 +40,7 @@ dependencies {
 <dependency>
   <groupId>com.logicmonitor</groupId>
   <artifactId>lm-data-sdk</artifactId>
-  <version>0.0.1-alpha</version>
+  <version>0.0.6-alpha</version>
 </dependency>
 ```
 ### Set Configurations
@@ -48,12 +48,14 @@ SDK must be configured with LogicMonitor.DataSDK Configuration class. While usin
 LM_ACCESS_KEY properties, In Case of BearerToken Authentication set LM_BEARER_TOKEN property. Company's name or Account
 name <b>must</b> be passed to LM_COMPANY property. All properties can be set using environment variable.
 
-|      Environment variable      |  Description |
-|-------------|:------|
-|  `LM_COMPANY` |  Account name (Company Name) is your organization name |
-|  `LM_ACCESS_ID` |  Access id while using LMv1 authentication.  |
-|  `LM_ACCESS_KEY` |    Access key while using LMv1 authentication. |
-|  `LM_BEARER_TOKEN` |    BearerToken while using Bearer authentication.|
+| Environment variable | Description                                           |
+|----------------------|:------------------------------------------------------|
+| `LM_COMPANY`         | Account name (Company Name) is your organization name |
+| `LM_ACCESS_ID`       | Access id while using LMv1 authentication.            |
+| `LM_ACCESS_KEY`      | Access key while using LMv1 authentication.           |
+| `LM_BEARER_TOKEN`    | BearerToken while using Bearer authentication.        |
+| `LM_DOMAIN_NAME`     | Configure custom endpoint                             |
+
 
 ### Read the [Library Documentation](https://logicmonitor.github.io/lm-data-sdk-java/) to use Metrics/Logs ingestion API.
 
